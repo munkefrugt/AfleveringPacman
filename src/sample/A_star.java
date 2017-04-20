@@ -37,7 +37,7 @@ public class A_star {
 
     int CurrentCenterNodeX;
     int CurrentCenterNodeY;
-    int startX=10;
+    int startX=7;
     int startY=13;
     NodeObject pacmanNode;
     NodeObject currentCenterNode = pacmanNode;
@@ -53,7 +53,7 @@ public class A_star {
     NodeObject[][] nodeObject;
     Group root;
     //int g =10; // can be changed if needed.
-    int goalX =10, goalY =9;
+    int goalX =7, goalY =1;
     private int xAbove;
     private int yAbove;
     private int stepValueG = 1;

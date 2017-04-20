@@ -87,16 +87,209 @@ public class Setup {
 
     private void makewalls() {
 
-        // make top left corner
+        // line at x,6
 
-        for(int x = 0; x < 21; x++) {
+        for(int x = 0; x < 5; x++) {
 
             makewallElement(x,6);
 
         }
-        // make 2 holes
-            nodeObject[6][6].setIsWallTofalse();
-            nodeObject[20][6].setIsWallTofalse();
+
+        for(int x = 7; x < 9; x++) {
+
+            makewallElement(x,6);
+
+        }
+
+
+        for(int x = 12; x < 15; x++) {
+
+            makewallElement(x,6);
+
+        }
+
+        // middel pieces
+        for(int x = 8; x < 13; x++) {
+
+            makewallElement(x,4);
+
+        }
+        for(int x = 8; x < 13; x++) {
+
+            makewallElement(x,8);
+
+        }
+        for(int x = 8; x < 13; x++) {
+
+            makewallElement(x,10);
+
+        }
+        for(int x = 8; x < 13; x++) {
+
+            makewallElement(x,12);
+
+        }
+        for(int x = 8; x < 13; x++) {
+
+            makewallElement(x,16);
+
+        }
+
+        // middle line vertical
+        for(int y = 5; y < 7; y++) {
+            makewallElement(10,y);
+        }
+
+        for(int y = 13; y < 15; y++) {
+            makewallElement(10,y);
+        }
+        for(int y = 17; y < 19; y++) {
+            makewallElement(10,y);
+        }
+
+        // ghost box
+        makewallElement(8,9);
+        makewallElement(12,9);
+
+        // wall left huge block
+
+        for(int y = 6; y < 9; y++) {
+
+            for(int x = 2; x < 5; x++) {
+            makewallElement(x,y);
+             }
+        }
+        // wall right huge block
+
+        for(int y = 6; y < 9; y++) {
+
+            for(int x = 16; x < 19; x++) {
+                makewallElement(x,y);
+            }
+        }
+        // wall left huge block under
+        for(int y = 10; y < 13; y++) {
+
+            for(int x = 2; x < 5; x++) {
+                makewallElement(x,y);
+            }
+        }
+        for(int y = 10; y < 13; y++) {
+
+            for(int x = 16; x < 19; x++) {
+                makewallElement(x,y);
+            }
+        }
+
+
+        ///bottom parts
+
+            // bottom left
+
+        makewallElement(2,16);
+        makewallElement(18,16);
+
+        for(int x = 16; x < 18; x++) {
+            makewallElement(x,14);
+        }
+
+        for(int x = 3; x < 5; x++) {
+            makewallElement(x,14);
+        }
+
+
+        for(int x = 6; x < 9; x++) {
+            makewallElement(x,14);
+        }
+
+        for(int x = 12; x < 15; x++) {
+            makewallElement(x,14);
+        }
+
+        // bottom lines
+        for(int x = 3; x < 9; x++) {
+            makewallElement(x,18);
+        }
+        for(int x = 12; x < 18; x++) {
+            makewallElement(x,18);
+        }
+
+        // lines vertical bottom
+        for(int y = 15; y < 17 ; y++) {
+            makewallElement(4,y);
+        }
+        for(int y = 15; y < 17 ; y++) {
+            makewallElement(16,y);
+        }
+        for(int y = 16; y < 18 ; y++) {
+            makewallElement(14,y);
+        }
+        for(int y = 16; y < 18 ; y++) {
+            makewallElement(6,y);
+        }
+
+
+
+
+
+        // random upper parts
+        // first 4 lines from the top
+
+
+
+
+        makewallElement(3,2);
+        makewallElement(4,2);
+
+        makewallElement(16,2);
+        makewallElement(17,2);
+
+        makewallElement(3,4);
+        makewallElement(4,4);
+
+        makewallElement(16,4);
+        makewallElement(17,4);
+
+        makewallElement(6,2);
+        makewallElement(7,2);
+        makewallElement(8,2);
+
+        makewallElement(10,2);
+        makewallElement(10,1);
+
+
+        makewallElement(12,2);
+        makewallElement(13,2);
+        makewallElement(14,2);
+
+        // down line (6,y )
+        for(int y = 4; y < 9 ; y++) {
+            makewallElement(6,y);
+
+        }
+
+        for(int y = 10; y < 13 ; y++) {
+            makewallElement(6,y);
+
+        }
+        // down line (14,y )
+
+        for(int y = 4; y < 9 ; y++) {
+            makewallElement(14,y);
+
+        }
+
+        for(int y = 10; y < 13 ; y++) {
+            makewallElement(14,y);
+
+        }
+
+
+
+
+
+
+
 
 
 
@@ -112,10 +305,17 @@ public class Setup {
             makewallElement(0,y);
             makewallElement(boxesX-1,y);
         }
+
         for(int x = 0; x < boxesX; x++) {
             makewallElement(x,0);
             makewallElement(x,boxesY-1);
         }
+        // second inder boarder
+        for(int y = 0; y < boxesY; y++) {
+            makewallElement(1,y);
+            makewallElement(boxesX-2,y);
+        }
+
 
 
     }
