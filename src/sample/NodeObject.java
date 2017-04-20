@@ -21,7 +21,7 @@ public class NodeObject {
 
     // default g is 0. beacuse the very node g is 0.
     int g= 0;
-    // when node is made is wall is false
+    // true if there is a wall on that node , false by default
     boolean isWall = false;
     // packMan will change node each time he takes a step. // default is false
     boolean isNodePacman = false;
@@ -61,7 +61,7 @@ public class NodeObject {
 
             rect= new Rectangle(x *blockSize, y*blockSize, blockSize, blockSize);
 
-            rect.setFill(Color.TRANSPARENT);
+            rect.setFill(Color.WHITE);
             rect.setStroke(Color.RED);
             // set line thickness
             rect.setStrokeWidth(1);
@@ -170,5 +170,10 @@ public class NodeObject {
     public Object getcameFrom() {
 
         return cameFrom;
+    }
+
+    public void setIsWallTofalse() {
+        isWall = false;
+        makeNodeRectangle();
     }
 }

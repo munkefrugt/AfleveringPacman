@@ -10,53 +10,17 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.animation.AnimationTimer;
 
-/*
-the main grid is is made with nodes, first node is 0,0
- X: (left to right) 0, 1,2 ect
- Y: (from up to down) 0, 1,2 ect
- x and y values stored in node are the same values. also starts with 0.
-
-
-
-notes on a a-star
-
-	// A* psudo code: http://web.mit.edu/eranki/www/tutorials/search/
-
-initialize the open list
-initialize the closed list
-put the starting node on the open list (you can leave its f at zero)
-
-while the open list is not empty
-    find the node with the least f on the open list, call it "q"
-    pop q off the open list
-    generate q's 8 successors and set their parents to q
-    for each successor
-    	if successor is the goal, stop the search
-        successor.g = q.g + distance between successor and q
-        successor.h = distance from goal to successor
-        successor.f = successor.g + successor.h
-
-        if a node with the same position as successor is in the OPEN list \
-            which has a lower f than successor, skip this successor
-        if a node with the same position as successor is in the CLOSED list \
-            which has a lower f than successor, skip this successor
-        otherwise, add the node to the open list
-    end
-    push q on the closed list
-end
-
- */
 public class Main extends Application {
 
 
 
     //Timeline timeline = new Timeline();
 
-
+    // board size https://www.google.dk/search?q=pac+man+maze+squares&client=ubuntu&hs=btr&channel=fs&source=lnms&tbm=isch&sa=X&ved=0ahUKEwioiL3g87LTAhWOJFAKHS8JBvAQ_AUIBigB&biw=1279&bih=644#imgrc=EQmm3O12MyJogM:
     NodeObject[][] nodeObject;
-    int boxesX = 40;
-    int boxesY = 40;
-    int blockSize = 20;
+    int boxesX = 21;
+    int boxesY = 21;
+    int blockSize = 40;
 
     int yHeight = boxesY *blockSize;
     int xWitdh = boxesX *blockSize ;
@@ -130,6 +94,8 @@ public class Main extends Application {
         //Filled rectangle test rectangle
         // x,y, size,size.
         final Rectangle pacMan = new Rectangle((directionX *(blockSize)+blockSize), (directionY *(blockSize)+blockSize), blockSize, blockSize);
+
+
         pacMan.setFill(Color.YELLOW);
 
         //final Rectangle gostpink = new Rectangle(40*blockSize, 40* blockSize, blockSize, blockSize);
@@ -152,20 +118,21 @@ public class Main extends Application {
         // make startupclass
         final Setup setup = new Setup(root,nodeObject,blockSize, boxesX,boxesY);
         setup.startUpBoard();
-
-
-
+        setup.makeGosts();
 
         root.getChildren().addAll(pacMan);
 
         // add search algoritm classes
-        //Gost gost = new Gost();
+
         A_star a_star = new A_star(root,nodeObject,blockSize, boxesX,boxesY);
 
         primaryStage.setTitle("A*");
         primaryStage.setScene(scene);
         primaryStage.show();
 
+        //setup.CreateNewTimer();
+        setup.startGost();
+        //setup.pacmanTimer();
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -177,7 +144,7 @@ public class Main extends Application {
                     System.out.println("up activate");
                     directionY = directionY -blockSize;
                     // update search algoritms
-                    updateSearchAlgoritms();
+                   //updateSearchAlgoritms();
 
 
 
@@ -208,6 +175,8 @@ public class Main extends Application {
                 setup.updateAllAlgorithms();
 
                 pacMan.relocate(directionX, directionY);
+
+
                 //random x
 
 
@@ -228,9 +197,7 @@ public class Main extends Application {
 
     }
 
-    public void updateSearchAlgoritms() {
 
-    }
 
 
 
