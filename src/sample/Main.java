@@ -10,6 +10,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.animation.AnimationTimer;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class Main extends Application {
 
 
@@ -33,8 +36,6 @@ public class Main extends Application {
     // x and y are in hole numbers
     int directionX;
     int directionY;
-    int gostPinkpositionX;
-    int gostPinkpositionY;
     //taken **********
 
 
@@ -44,6 +45,14 @@ public class Main extends Application {
 
         Group root = new Group();
         Scene scene = new Scene(root, xWitdh, yHeight);
+        // initialise the object class
+        nodeObject = new NodeObject[boxesX][boxesY];
+
+
+        // make startupclass
+        final Setup setup = new Setup(scene,root,nodeObject,blockSize, boxesX,boxesY);
+
+
 
         // when keys are pressed -source: http://stackoverflow.com/questions/29962395/how-to-write-a-keylistener-for-javafx
         up=false;
@@ -52,6 +61,27 @@ public class Main extends Application {
             public void handle(KeyEvent keyEvent) {
 
 
+                /*switch (keyEvent.getCode()) {
+                    case W:  up =  true;
+                        System.out.println("up");
+
+                        break;
+                    case S: down = true;
+                        System.out.println("down");
+                        break;
+                    case A: left = true;
+                        System.out.println("left");
+
+                        break;
+                    case D: right = true;
+                        System.out.println("right");
+
+                        break;
+                    case P:
+                        System.out.println("pause");
+
+                        break;
+                }*/
                 switch (keyEvent.getCode()) {
                     case W:  up =  true;
                         System.out.println("up");
@@ -113,12 +143,13 @@ public class Main extends Application {
 
 
         // make the nodeclass, to call each node object, do: nodeObject[x][y]. x, y, are numbers
-        nodeObject = new NodeObject[boxesX][boxesY];
+        //nodeObject = new NodeObject[boxesX][boxesY];
 
         // make startupclass
-        final Setup setup = new Setup(root,nodeObject,blockSize, boxesX,boxesY);
+       // final Setup setup = new Setup(root,nodeObject,blockSize, boxesX,boxesY);
         setup.startUpBoard();
         setup.makeGosts();
+        setup.startMover();
 
         root.getChildren().addAll(pacMan);
 
@@ -133,7 +164,7 @@ public class Main extends Application {
         //setup.CreateNewTimer();
         setup.startGost();
         //setup.pacmanTimer();
-        AnimationTimer timer = new AnimationTimer() {
+        final AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
 
@@ -183,17 +214,21 @@ public class Main extends Application {
                 //gostpink.relocate(gostPinkpositionX, gostPinkpositionY);
 
                 //sleep
-                try {
+                /*try {
                     Thread.sleep(50);
                 } catch (InterruptedException ie)
                 {
                     System.out.println("error sleep-main");
-                }
+                }*/
 
 
             }
         };
         timer.start();
+
+
+
+
 
     }
 

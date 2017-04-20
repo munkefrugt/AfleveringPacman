@@ -1,7 +1,11 @@
 package sample;
 
 import javafx.animation.AnimationTimer;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -12,6 +16,7 @@ import java.util.TimerTask;
  * Created by v on 4/1/17.
  */
 public class Setup {
+    private final Scene scene;
     Gost orangeGost;
     Gost redGost;
     Gost pinkGost;
@@ -26,9 +31,10 @@ public class Setup {
     private Rectangle blueRect;
     private Rectangle orangeRect;
 
-    public Setup(Group root, NodeObject[][] nodeObject, int blockSize, int boxesX, int boxesY) {
+    public Setup(Scene scene, Group root, NodeObject[][] nodeObject, int blockSize, int boxesX, int boxesY) {
         // nodeObject = new NodeObject[10][10];
 
+        this.scene = scene;
         this.root=root;
         this.nodeObject = nodeObject;
         this.blockSize = blockSize;
@@ -564,4 +570,50 @@ public class Setup {
 
 
     }
+
+    public void startMover() {
+
+        scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            public boolean up;
+            public boolean down;
+            public boolean left;
+            public boolean right;
+
+            @Override
+            public void handle(KeyEvent keyEvent) {
+
+
+
+                switch (keyEvent.getCode()) {
+                    case UP:  up =  true;
+                        System.out.println("setup up");
+
+                        
+                        break;
+                    case DOWN: down = true;
+                        System.out.println("setup down");
+                        break;
+                    case LEFT: left = true;
+                        System.out.println("setup left");
+
+                        break;
+                    case RIGHT: right = true;
+                        System.out.println("setup right");
+
+                        break;
+                    case P:
+                        System.out.println("setup pause");
+
+                        break;
+                }
+
+            }
+        });
+
+
+
+
+    }
+
+
 }
