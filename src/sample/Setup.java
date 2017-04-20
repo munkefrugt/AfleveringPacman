@@ -4,7 +4,6 @@ import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -30,6 +29,12 @@ public class Setup {
     private Rectangle pinkRect;
     private Rectangle blueRect;
     private Rectangle orangeRect;
+
+    int pacmanStartPosX = 2;
+    int pacmanStartPosY = 3;
+    int pacmanPosX = pacmanStartPosX;
+    int pacmanPosY = pacmanStartPosY ;
+
 
     public Setup(Scene scene, Group root, NodeObject[][] nodeObject, int blockSize, int boxesX, int boxesY) {
         // nodeObject = new NodeObject[10][10];
@@ -335,13 +340,6 @@ public class Setup {
 
 
 
-    // make the gosts moves and make the algoritms.
-    public void updateAllAlgorithms() {
-
-
-    }
-
-
     public void CreateNewTimer() {
         AnimationTimer gostTimer = new AnimationTimer() {
 
@@ -579,26 +577,88 @@ public class Setup {
             public boolean left;
             public boolean right;
 
+
+            int yCheck;
+            int xCheck;
+
             @Override
             public void handle(KeyEvent keyEvent) {
 
-
+                nodeObject[pacmanPosX][pacmanPosY].makeitPacman();
+                nodeObject[pacmanPosX][pacmanPosY].setRectColor(Color.YELLOW);
 
                 switch (keyEvent.getCode()) {
-                    case UP:  up =  true;
-                        System.out.println("setup up");
+                    case UP:
 
-                        
+                        System.out.println("setup - up");
+                        yCheck = pacmanPosY -1;
+                        if(!nodeObject[pacmanPosX][yCheck].getisWall())
+                        {
+                            nodeObject[pacmanPosX][pacmanPosY].setRectColor(Color.WHITE);
+                            pacmanPosY = yCheck;
+                            upDatePacman();
+
+                            System.out.println("no wall for pacman");
+                        }
+                        else{
+                            System.out.println("pacman cant walk here");
+
+                        }
                         break;
-                    case DOWN: down = true;
-                        System.out.println("setup down");
+
+
+                    case DOWN:
+                        System.out.println("setup -down");
+
+                        yCheck = pacmanPosY +1;
+                        if(!nodeObject[pacmanPosX][yCheck].getisWall())
+                        {
+                            nodeObject[pacmanPosX][pacmanPosY].setRectColor(Color.WHITE);
+                            pacmanPosY = yCheck;
+                            upDatePacman();
+                        }
+                        else{
+                            System.out.println("pacman cant walk here");
+
+                        }
                         break;
-                    case LEFT: left = true;
-                        System.out.println("setup left");
+
+
+                    case LEFT:
+                        System.out.println("setup -left");
+                        xCheck = pacmanPosX -1;
+                        if(!nodeObject[xCheck][pacmanPosY].getisWall())
+                        {
+                            nodeObject[pacmanPosX][pacmanPosY].setRectColor(Color.WHITE);
+                            pacmanPosX = xCheck;
+                            upDatePacman();
+
+                            System.out.println("no wall for pacman");
+                        }
+                        else{
+                            System.out.println("pacman cant walk here");
+
+                        }
 
                         break;
-                    case RIGHT: right = true;
-                        System.out.println("setup right");
+                    case RIGHT:
+
+                        System.out.println("setup -right");
+                        System.out.println("setup -left");
+                        xCheck = pacmanPosX +1;
+                        if(!nodeObject[xCheck][pacmanPosY].getisWall())
+                        {
+                            nodeObject[pacmanPosX][pacmanPosY].setRectColor(Color.WHITE);
+                            pacmanPosX = xCheck;
+                            upDatePacman();
+
+
+                            System.out.println("no wall for pacman");
+                        }
+                        else{
+                            System.out.println("pacman cant walk here");
+
+                        }
 
                         break;
                     case P:
@@ -607,10 +667,25 @@ public class Setup {
                         break;
                 }
 
+
+                A_star a_star = new A_star(pacmanPosX,pacmanPosY,root,nodeObject,blockSize, boxesX,boxesY);
+
+
             }
         });
 
 
+
+
+    }
+
+    private void upDatePacman() {
+        nodeObject[pacmanPosX][pacmanPosY].setRectColor(Color.YELLOW);
+
+        nodeObject[pacmanPosX][pacmanPosY].makeitNotPacman();
+
+        A_star a_star = new A_star(pacmanPosX,pacmanPosY,root,nodeObject,blockSize, boxesX,boxesY);
+        a_star.clearPath();
 
 
     }

@@ -10,9 +10,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.animation.AnimationTimer;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 public class Main extends Application {
 
 
@@ -154,8 +151,9 @@ public class Main extends Application {
         root.getChildren().addAll(pacMan);
 
         // add search algoritm classes
-
-        A_star a_star = new A_star(root,nodeObject,blockSize, boxesX,boxesY);
+        int pacmanPosX =2;
+        int pacmanPosY = 2;
+        A_star a_star = new A_star(pacmanPosX, pacmanPosY, root,nodeObject,blockSize, boxesX,boxesY);
 
         primaryStage.setTitle("A*");
         primaryStage.setScene(scene);
@@ -203,7 +201,7 @@ public class Main extends Application {
 
 
                 }
-                setup.updateAllAlgorithms();
+                //setup.updateAllAlgorithms();
 
                 pacMan.relocate(directionX, directionY);
 

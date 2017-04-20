@@ -176,4 +176,8 @@ public class NodeObject {
         isWall = false;
         makeNodeRectangle();
     }
+
+    public void makeitNotPacman() {
+        isNodePacman = false;
+    }
 }

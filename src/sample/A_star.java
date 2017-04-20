@@ -40,6 +40,7 @@ public class A_star {
     int startX=7;
     int startY=13;
     NodeObject pacmanNode;
+    //
     NodeObject currentCenterNode = pacmanNode;
 
 
@@ -53,7 +54,7 @@ public class A_star {
     NodeObject[][] nodeObject;
     Group root;
     //int g =10; // can be changed if needed.
-    int goalX =7, goalY =1;
+    int goalX =6, goalY =1;
     private int xAbove;
     private int yAbove;
     private int stepValueG = 1;
@@ -87,8 +88,10 @@ public class A_star {
     */
 
 
-    public A_star(Group root, NodeObject[][] nodeObject, int blockSize, int boxesX, int boxesY){
+    public A_star(int pacmanPosX, int pacmanPosY, Group root, NodeObject[][] nodeObject, int blockSize, int boxesX, int boxesY){
 
+        startX = pacmanPosX;
+        startY = pacmanPosY;
         this.root=root;
         this.nodeObject = nodeObject;
         this.blockSize = blockSize;
@@ -537,4 +540,13 @@ public class A_star {
         return h;
     }
 
+    public void clearPath() {
+        currentCenterNode.setRectColor(Color.BLACK);
+        OpenlistUncheckedNeighbors.clear();
+        closedList.clear();
+        finalPathNodes.clear();
+        // reset currentCenterNode to ghostNode , the ghost is the chaser. pacman is target.
+
+
+    }
 }
