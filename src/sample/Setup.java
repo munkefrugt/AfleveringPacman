@@ -564,6 +564,9 @@ public class Setup {
 
     public void startMover() {
 
+        //a_star = new A_star(redGhostPosX,redGhostPosY,pacmanPosX,pacmanPosY,root,nodeObject,blockSize, boxesX,boxesY);
+        //maketheRedghostMoveAlongAStar();
+
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 
             int yCheck;
@@ -680,9 +683,9 @@ public class Setup {
         nodeObject[pacmanPosX][pacmanPosY].makeitNotPacman();
 
         a_star = new A_star(redGhostPosX,redGhostPosY,pacmanPosX,pacmanPosY,root,nodeObject,blockSize, boxesX,boxesY);
-        //a_star.clearPath();
         maketheRedghostMoveAlongAStar();
 
+        //a_star.clearPath();
     }
 
     private void maketheRedghostMoveAlongAStar() {
@@ -701,13 +704,13 @@ public class Setup {
                 // make the ghost move through the list of where the path
                 // go though the list the oposite way.  so from currentnode witch is the goal and the to all "going to"'s.
 
-                a_star.moveRedgostalongPath();
+                //a_star.moveRedgostalongPath();
 
-                NodeObject firstNode = a_star.getFirstNodeInFinalPathNodes();
-                redgostPosX= firstNode.getUniqueXval();
-                redgostPosY=firstNode.getUniqueYval();
-                System.out.println("firstNode.getUniqueXval()"+ firstNode.getUniqueXval());
-                System.out.println("firstNode.getUniqueYval()"+ firstNode.getUniqueYval());
+                NodeObject LastNodeInFinalpathArray = a_star.getlastNodeInFinalPathNodes();
+                redgostPosX= LastNodeInFinalpathArray.getUniqueXval();
+                redgostPosY=LastNodeInFinalpathArray.getUniqueYval();
+                System.out.println("LastNodeInFinalpathArray.getUniqueXval()"+ LastNodeInFinalpathArray.getUniqueXval());
+                System.out.println("LastNodeInFinalpathArray.getUniqueYval()"+ LastNodeInFinalpathArray.getUniqueYval());
 
                 System.out.println("redgostPosX "+redgostPosX);
                 System.out.println("redgostPosY "+redgostPosY);
@@ -717,7 +720,7 @@ public class Setup {
 
                 redGostRectangle.relocate(relocateValX*blockSize,relocateValY*blockSize);
 
-
+                // delete the first value of the finalPathNodes.
 
 
 

@@ -146,6 +146,7 @@ public class Main extends Application {
        // final Setup setup = new Setup(root,nodeObject,blockSize, boxesX,boxesY);
         setup.startUpBoard();
         setup.makeGosts();
+
         setup.startMover();
 
         root.getChildren().addAll(pacMan);

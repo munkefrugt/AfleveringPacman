@@ -577,13 +577,19 @@ public class A_star {
         // the the first element andmake that the new posotion
         // relocate the red ghost
 
-        finalPathNodes.get(0);
+        //finalPathNodes.get(0);
 
 
     }
 
-    public NodeObject getFirstNodeInFinalPathNodes() {
-        NodeObject firstXinfinalPathNodes= finalPathNodes.get(0);
+    public NodeObject getlastNodeInFinalPathNodes() {
+        // get last nodeObject in the list.
+
+            // finalPathNodes.size()-1 because the first index number is 0.
+            NodeObject firstXinfinalPathNodes= finalPathNodes.get(finalPathNodes.size()-1);
+        finalPathNodes.remove(finalPathNodes.size()-1);
         return firstXinfinalPathNodes;
     }
+
+
 }
