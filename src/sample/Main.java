@@ -153,7 +153,7 @@ public class Main extends Application {
         // add search algoritm classes
         int pacmanPosX =2;
         int pacmanPosY = 2;
-        A_star a_star = new A_star(pacmanPosX, pacmanPosY, root,nodeObject,blockSize, boxesX,boxesY);
+        //A_star a_star = new A_star(pacmanPosX, pacmanPosY, root,nodeObject,blockSize, boxesX,boxesY);
 
         primaryStage.setTitle("A*");
         primaryStage.setScene(scene);

@@ -25,15 +25,20 @@ public class Setup {
     Group root;
     int blockSize;
     NodeObject[][] nodeObject;
-    private Rectangle redRect;
+    private Rectangle redGostRectangle;
     private Rectangle pinkRect;
     private Rectangle blueRect;
     private Rectangle orangeRect;
 
+    public int redgostPosX = 6* blockSize;
+    public int redgostPosY = 2*blockSize;
     int pacmanStartPosX = 2;
     int pacmanStartPosY = 3;
     int pacmanPosX = pacmanStartPosX;
     int pacmanPosY = pacmanStartPosY ;
+    private A_star a_star;
+    private int redGhostPosX = 7;
+    private int redGhostPosY= 13;
 
 
     public Setup(Scene scene, Group root, NodeObject[][] nodeObject, int blockSize, int boxesX, int boxesY) {
@@ -344,8 +349,7 @@ public class Setup {
         AnimationTimer gostTimer = new AnimationTimer() {
 
             // start positions
-            public int gostPosX = 6* blockSize;
-            public int gostPosY = 2*blockSize;
+
 
             @Override
             public void handle(long l) {
@@ -368,9 +372,9 @@ public class Setup {
                 System.out.println("direction  "+direction);
 
                 // current x,y. for gost
-                // x value = gostPosX/ blocksize
-                int x = gostPosX / blockSize;
-                int y = gostPosY / blockSize;
+                // x value = redgostPosX/ blocksize
+                int x = redgostPosX / blockSize;
+                int y = redgostPosY / blockSize;
 
 
                 System.out.println("current x,y"+ x +", "+y);
@@ -380,13 +384,13 @@ public class Setup {
 
 
                     System.out.println("gost up activate");
-                    gostPosY = gostPosY -blockSize;
-                    int yCheck = gostPosY /blockSize;
+                    redgostPosY = redgostPosY -blockSize;
+                    int yCheck = redgostPosY /blockSize;
                     if (!nodeObject[x][yCheck].getisWall()) {
 
                         System.out.println("not wall");
                     System.out.println("nodeObject[x][yCheck].getisWall() = "+nodeObject[x][yCheck].getisWall());
-                        redRect.relocate(gostPosX, gostPosY);
+                        redGostRectangle.relocate(redgostPosX, redgostPosY);
 
                     }
                     else {
@@ -396,13 +400,13 @@ public class Setup {
 
                         // reset
 
-                        gostPosY = gostPosY +2*blockSize;
+                        redgostPosY = redgostPosY +2*blockSize;
 
                     }
 
 
 
-                    //gostPosY = gostPosY -blockSize;
+                    //redgostPosY = redgostPosY -blockSize;
 
 
 
@@ -410,13 +414,13 @@ public class Setup {
 
                 if(down ==direction) {
                     System.out.println("gost down activate");
-                    gostPosY = gostPosY +blockSize;
-                    int yCheck = gostPosY /blockSize;
+                    redgostPosY = redgostPosY +blockSize;
+                    int yCheck = redgostPosY /blockSize;
                     if (!nodeObject[x][yCheck].getisWall()) {
 
                         System.out.println("not wall");
                         System.out.println("nodeObject[x][yCheck].getisWall() = "+nodeObject[x][yCheck].getisWall());
-                        redRect.relocate(gostPosX, gostPosY);
+                        redGostRectangle.relocate(redgostPosX, redgostPosY);
 
                     }
                     else {
@@ -424,12 +428,12 @@ public class Setup {
                         System.out.println("block by wall");
                         System.out.println("nodeObject[x][yCheck].getisWall() = "+nodeObject[x][yCheck].getisWall());
 
-                        gostPosY = gostPosY -2*blockSize;
+                        redgostPosY = redgostPosY -2*blockSize;
 
                     }
                     System.out.println("gost down activate");
 
-                    //gostPosY = gostPosY +blockSize ;
+                    //redgostPosY = redgostPosY +blockSize ;
                     // upate all gosth
 
 
@@ -439,26 +443,26 @@ public class Setup {
                 {
                     System.out.println("gost left activate");
 
-                    gostPosX = gostPosX -blockSize;
+                    redgostPosX = redgostPosX -blockSize;
 
 
 
                     System.out.println("gost up activate");
                     // devide by block size to get the actul x value.
-                    int xCheck = gostPosX /blockSize;
+                    int xCheck = redgostPosX /blockSize;
 
                     if (!nodeObject[xCheck][y].getisWall()) {
 
                         System.out.println("not wall");
                         System.out.println("nodeObject[xCheck][y].getisWall() = "+nodeObject[xCheck][y].getisWall());
-                        redRect.relocate(gostPosX, gostPosY);
+                        redGostRectangle.relocate(redgostPosX, redgostPosY);
 
 
                     }
                     else {
                         // reset
                         System.out.println(" wall");
-                        gostPosX = gostPosX +(2*blockSize);
+                        redgostPosX = redgostPosX +(2*blockSize);
                         System.out.println("nodeObject[xCheck][y].getisWall() = "+nodeObject[xCheck][y].getisWall());
 
 
@@ -469,25 +473,25 @@ public class Setup {
                 {
                     System.out.println("gost right activate");
 
-                    gostPosX = gostPosX +blockSize;
+                    redgostPosX = redgostPosX +blockSize;
 
 
 
 
 
                     System.out.println("gost up activate");
-                    int xCheck = gostPosX /blockSize;
+                    int xCheck = redgostPosX /blockSize;
                     if (!nodeObject[xCheck][y].getisWall()) {
 
                         System.out.println("not wall");
                         System.out.println("nodeObject[xCheck][y].getisWall() = "+nodeObject[xCheck][y].getisWall());
-                        redRect.relocate(gostPosX, gostPosY);
+                        redGostRectangle.relocate(redgostPosX, redgostPosY);
 
                     }
                     else {
                         // reset
                         System.out.println("block by wall");
-                        gostPosX = gostPosX -2*blockSize;
+                        redgostPosX = redgostPosX -2*blockSize;
                         System.out.println("nodeObject[xCheck][y].getisWall() = "+nodeObject[xCheck][y].getisWall());
 
 
@@ -520,8 +524,8 @@ public class Setup {
     public void makeGosts() {
 
         // remember the number Rectangle (is the size of the square,)
-        redRect = new Rectangle(0,0,blockSize,blockSize);
-        redRect.setFill(Color.RED);
+        redGostRectangle = new Rectangle(0,0,blockSize,blockSize);
+        redGostRectangle.setFill(Color.SKYBLUE);
 
         pinkRect = new Rectangle(blockSize,blockSize);
         pinkRect.setFill(Color.PINK);
@@ -533,7 +537,7 @@ public class Setup {
 
 
 
-        root.getChildren().addAll(blueRect,pinkRect, redRect,orangeRect);
+        root.getChildren().addAll(blueRect,pinkRect, redGostRectangle,orangeRect);
 
 
 
@@ -541,42 +545,26 @@ public class Setup {
 
 
     public void startGost() {
-        Timer t = new Timer();
+       /* Timer t = new Timer();
         t.schedule(new TimerTask() {
             @Override
             public void run() {
 
 
-                System.out.println("each gost moves");
-
                 // find a direction and move that way.
-
-
-                RedWalksWalkTheAstarPlusrand();
-
-
 
             }
 
 
         }, 0, 1000);
+        */
     }
 
-    private void RedWalksWalkTheAstarPlusrand() {
 
-
-
-
-    }
 
     public void startMover() {
 
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            public boolean up;
-            public boolean down;
-            public boolean left;
-            public boolean right;
-
 
             int yCheck;
             int xCheck;
@@ -594,6 +582,8 @@ public class Setup {
                         yCheck = pacmanPosY -1;
                         if(!nodeObject[pacmanPosX][yCheck].getisWall())
                         {
+                            nodeObject[pacmanPosX][pacmanPosY].makeitPacman();
+
                             nodeObject[pacmanPosX][pacmanPosY].setRectColor(Color.WHITE);
                             pacmanPosY = yCheck;
                             upDatePacman();
@@ -613,6 +603,8 @@ public class Setup {
                         yCheck = pacmanPosY +1;
                         if(!nodeObject[pacmanPosX][yCheck].getisWall())
                         {
+                            nodeObject[pacmanPosX][pacmanPosY].makeitPacman();
+
                             nodeObject[pacmanPosX][pacmanPosY].setRectColor(Color.WHITE);
                             pacmanPosY = yCheck;
                             upDatePacman();
@@ -629,6 +621,8 @@ public class Setup {
                         xCheck = pacmanPosX -1;
                         if(!nodeObject[xCheck][pacmanPosY].getisWall())
                         {
+                            nodeObject[pacmanPosX][pacmanPosY].makeitPacman();
+
                             nodeObject[pacmanPosX][pacmanPosY].setRectColor(Color.WHITE);
                             pacmanPosX = xCheck;
                             upDatePacman();
@@ -648,6 +642,8 @@ public class Setup {
                         xCheck = pacmanPosX +1;
                         if(!nodeObject[xCheck][pacmanPosY].getisWall())
                         {
+                            nodeObject[pacmanPosX][pacmanPosY].makeitPacman();
+
                             nodeObject[pacmanPosX][pacmanPosY].setRectColor(Color.WHITE);
                             pacmanPosX = xCheck;
                             upDatePacman();
@@ -668,7 +664,6 @@ public class Setup {
                 }
 
 
-                A_star a_star = new A_star(pacmanPosX,pacmanPosY,root,nodeObject,blockSize, boxesX,boxesY);
 
 
             }
@@ -684,10 +679,52 @@ public class Setup {
 
         nodeObject[pacmanPosX][pacmanPosY].makeitNotPacman();
 
-        A_star a_star = new A_star(pacmanPosX,pacmanPosY,root,nodeObject,blockSize, boxesX,boxesY);
-        a_star.clearPath();
+        a_star = new A_star(redGhostPosX,redGhostPosY,pacmanPosX,pacmanPosY,root,nodeObject,blockSize, boxesX,boxesY);
+        //a_star.clearPath();
+        maketheRedghostMoveAlongAStar();
+
+    }
+
+    private void maketheRedghostMoveAlongAStar() {
 
 
+        Timer t = new Timer();
+        t.schedule(new TimerTask() {
+            @Override
+            public void run() {
+
+
+                //System.out.println("each gost moves");
+
+                // find a direction and move that way.
+
+                // make the ghost move through the list of where the path
+                // go though the list the oposite way.  so from currentnode witch is the goal and the to all "going to"'s.
+
+                a_star.moveRedgostalongPath();
+
+                NodeObject firstNode = a_star.getFirstNodeInFinalPathNodes();
+                redgostPosX= firstNode.getUniqueXval();
+                redgostPosY=firstNode.getUniqueYval();
+                System.out.println("firstNode.getUniqueXval()"+ firstNode.getUniqueXval());
+                System.out.println("firstNode.getUniqueYval()"+ firstNode.getUniqueYval());
+
+                System.out.println("redgostPosX "+redgostPosX);
+                System.out.println("redgostPosY "+redgostPosY);
+                // for some reason itdosent work outside thetime loop and the variables have to be redefined.
+                int relocateValX= redgostPosX;
+                int relocateValY= redgostPosY;
+
+                redGostRectangle.relocate(relocateValX*blockSize,relocateValY*blockSize);
+
+
+
+
+
+            }
+
+
+        }, 0, 1000);
     }
 
 

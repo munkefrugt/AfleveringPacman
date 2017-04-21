@@ -13,7 +13,7 @@ import java.util.TreeMap;
  */
 public class A_star {
     NodeObject goalNode;
-    // the neighbornodes that are not walls are added to list list for, where they lateer are evaluated, for finding lowest f.
+    // the neighbornodes that are not walls are added to list list for, where they later are evaluated, for finding lowest f.
     Map<NodeObject, Double> OpenlistUncheckedNeighbors = new HashMap<NodeObject, Double>();
 
     // Closed list are visited nodes, Initially, only the start node is known. and visited,
@@ -39,9 +39,9 @@ public class A_star {
     int CurrentCenterNodeY;
     int startX=7;
     int startY=13;
-    NodeObject pacmanNode;
+    NodeObject redGostNodeAstarStartingPos;
     //
-    NodeObject currentCenterNode = pacmanNode;
+    NodeObject currentCenterNode = redGostNodeAstarStartingPos;
 
 
     // the node that its is currently checking from is the current center node, from here it finds neighbors,
@@ -54,10 +54,12 @@ public class A_star {
     NodeObject[][] nodeObject;
     Group root;
     //int g =10; // can be changed if needed.
-    int goalX =6, goalY =1;
+
+    int goalX, goalY;
     private int xAbove;
     private int yAbove;
     private int stepValueG = 1;
+    private int redGhostPosX;
     // start with the pacman location
     // now just testing.
     /*
@@ -67,39 +69,26 @@ public class A_star {
     initialize the closed list
     put the starting node on the open list (you can leave its f at zero)
 
-    while the open list is not empty
-        find the node with the least f on the open list, call it "q"
-        pop q off the open list
-        generate q's 8 successors and set their parents to q
-        for each successor
-            if successor is the goal, stop the search
-            successor.g = q.g + distance between successor and q
-            successor.h = distance from goal to successor
-            successor.f = successor.g + successor.h
 
-            if a node with the same position as successor is in the OPEN list \
-                which has a lower f than successor, skip this successor
-            if a node with the same position as successor is in the CLOSED list \
-                which has a lower f than successor, skip this successor
-            otherwise, add the node to the open list
-        end
-        push q on the closed list
-    end
     */
 
 
-    public A_star(int pacmanPosX, int pacmanPosY, Group root, NodeObject[][] nodeObject, int blockSize, int boxesX, int boxesY){
+    public A_star(int redGhostPosX, int redGhostPosY, int pacmanPosX, int pacmanPosY, Group root, NodeObject[][] nodeObject, int blockSize, int boxesX, int boxesY){
 
-        startX = pacmanPosX;
-        startY = pacmanPosY;
+        //  the goal is pacman
+        // the start is the ghost
+        goalX = pacmanPosX;
+        goalY = pacmanPosY;
+        startX = redGhostPosX;
+        startY = redGhostPosY;
+
         this.root=root;
         this.nodeObject = nodeObject;
         this.blockSize = blockSize;
         this.boxesX = boxesX;
         this.boxesY = boxesY;
 
-        pacmanNode = nodeObject[startX][startY];
-        pacmanNode.makeitPacman();
+        redGostNodeAstarStartingPos = nodeObject[startX][startY];
         currentCenterNode = nodeObject[startX][startY];
         currentCenterNode.takeOfOpenList();
         //Make  goal node.
@@ -126,6 +115,7 @@ public class A_star {
 
             // is current node = goal? then break out.
 
+            // find the goal for the a star. this is walking from pack man to the ghost
             if (currentCenterNode == goalNode)
             {
                 // jump out of loop
@@ -265,39 +255,65 @@ public class A_star {
 
 
     private void makeThePath() {
-        //int i =0;
-        while(true)
-        {
-            if (currentCenterNode ==pacmanNode )
+        // make a timer loop
+
+
+
+            //int i =0;
+            while(true)
             {
-                System.out.println("path done ");
-                break;
+
+
+
+
+                /*Timer t = new Timer();
+                t.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                */
+                        // note that the redGostNodeAstarStartingPos is theplace that the astar builds the algoritm from,
+                        // but here its the trigger since we are going back and finding out starting position.
+                        if (currentCenterNode == redGostNodeAstarStartingPos)
+                        {
+                            System.out.println("path done , and path have been followed all the way back trough all the " +
+                                    "previus nodes to where it came from, this shouls be the ghost  "+currentCenterNode.getUniqueXval()+","+currentCenterNode.getUniqueYval());
+
+                            break;
+                        }
+
+                        // add the nodes to the final pathlist.
+                        finalPathNodes.add(currentCenterNode);
+
+
+
+                        currentCenterNode.setRectColor(Color.ORANGE);
+                        // change to next node.
+                        NodeObject previusNode = (NodeObject) currentCenterNode.getcameFrom();
+
+                        previusNode.setRectColor(Color.ORANGE);
+
+                        System.out.println("previusNode (x,y)  "+previusNode.getUniqueXval()+","+previusNode.getUniqueYval());
+
+
+                        // change the previus node to currentcenterNode
+                        currentCenterNode =  previusNode;
+                        //i++;
+
+                        // add every step to an arraylist.
+
+
+
+                 /*   }
+
+
+                }, 0, 1000);
+
+                */
+
+
+
+
             }
-
-            // add the nodes to the final pathlist.
-            finalPathNodes.add(currentCenterNode);
-
-            currentCenterNode.setRectColor(Color.ORANGE);
-            // change to next node.
-            NodeObject previusNode = (NodeObject) currentCenterNode.getcameFrom();
-
-            previusNode.setRectColor(Color.ORANGE);
-
-            System.out.println("previusNode (x,y)  "+previusNode.getUniqueXval()+","+previusNode.getUniqueYval());
-
-
-            // change the previus node to currentcenterNode
-            currentCenterNode =  previusNode;
-            //i++;
-
-            // add every step to an arraylist.
-
-
-
-
-
-
-        }
 
     }
 
@@ -548,5 +564,26 @@ public class A_star {
         // reset currentCenterNode to ghostNode , the ghost is the chaser. pacman is target.
 
 
+    }
+
+
+    public int getRedGhostPosX() {
+        return redGhostPosX;
+    }
+
+    public void moveRedgostalongPath() {
+
+        // the ghost is walking now.
+        // the the first element andmake that the new posotion
+        // relocate the red ghost
+
+        finalPathNodes.get(0);
+
+
+    }
+
+    public NodeObject getFirstNodeInFinalPathNodes() {
+        NodeObject firstXinfinalPathNodes= finalPathNodes.get(0);
+        return firstXinfinalPathNodes;
     }
 }
