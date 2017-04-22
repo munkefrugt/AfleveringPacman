@@ -582,7 +582,7 @@ public class A_star {
 
     }
 
-    public NodeObject getlastNodeInFinalPathNodes() {
+    public NodeObject getlastNodeInFinalPathNodesAndRemove() {
         // get last nodeObject in the list.
 
             // finalPathNodes.size()-1 because the first index number is 0.
@@ -592,4 +592,8 @@ public class A_star {
     }
 
 
+    public ArrayList<NodeObject> getArrayFinalPathNodes() {
+        ArrayList<NodeObject> arrayFinalPathNodes = finalPathNodes;
+        return arrayFinalPathNodes;
+    }
 }

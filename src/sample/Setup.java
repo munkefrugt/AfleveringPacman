@@ -8,9 +8,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 /**
  * Created by v on 4/1/17.
  */
@@ -39,6 +36,7 @@ public class Setup {
     private A_star a_star;
     private int redGhostPosX = 7;
     private int redGhostPosY= 13;
+    Thread t1;
 
 
     public Setup(Scene scene, Group root, NodeObject[][] nodeObject, int blockSize, int boxesX, int boxesY) {
@@ -683,9 +681,24 @@ public class Setup {
         nodeObject[pacmanPosX][pacmanPosY].makeitNotPacman();
 
         a_star = new A_star(redGhostPosX,redGhostPosY,pacmanPosX,pacmanPosY,root,nodeObject,blockSize, boxesX,boxesY);
+        stopexistingTreadIfAny();
         maketheRedghostMoveAlongAStar();
 
         //a_star.clearPath();
+    }
+
+    private void stopexistingTreadIfAny() {
+
+        if(t1 != null)
+        {
+            System.out.println("stop thread t1");
+            t1.interrupt();
+
+        }
+        else if (t1 == null)
+        {
+            System.out.println("no thread t1");
+        }
     }
 
     private void maketheRedghostMoveAlongAStar() {
@@ -698,12 +711,13 @@ public class Setup {
         */
 
         // make a new thread
-        final Thread t1 = new Thread(new Runnable() {
+         t1 = new Thread(new Runnable() {
 
 
             public void run() {
-                int i= 1;
-                while(i <10)
+                int i= 0;
+                int pathLenght = a_star.getArrayFinalPathNodes().size();
+                while(true)
                 {
 
                     //System.out.println("each gost moves");
@@ -715,7 +729,7 @@ public class Setup {
 
 
 
-                    NodeObject LastNodeInFinalpathArray = a_star.getlastNodeInFinalPathNodes();
+                    NodeObject LastNodeInFinalpathArray = a_star.getlastNodeInFinalPathNodesAndRemove();
                     redgostPosX= LastNodeInFinalpathArray.getUniqueXval();
                     redgostPosY=LastNodeInFinalpathArray.getUniqueYval();
                     System.out.println("LastNodeInFinalpathArray.getUniqueXval()"+ LastNodeInFinalpathArray.getUniqueXval());
@@ -740,7 +754,9 @@ public class Setup {
 
                     System.out.println("t2 one sec interval " + i);
                     i ++;
-                    if (i > 3){
+
+                    // TODO replace pathLenght by if (gost == pacman)??
+                    if (i == pathLenght){
                         System.out.println("break out");
                         System.out.println("stop thread");
 
