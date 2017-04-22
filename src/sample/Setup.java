@@ -679,8 +679,7 @@ public class Setup {
         nodeObject[pacmanPosX][pacmanPosY].setRectColor(Color.YELLOW);
 
         nodeObject[pacmanPosX][pacmanPosY].makeitNotPacman();
-
-        a_star = new A_star(redGhostPosX,redGhostPosY,pacmanPosX,pacmanPosY,root,nodeObject,blockSize, boxesX,boxesY);
+        // TODO delete this astar
         stopexistingTreadIfAny();
         maketheRedghostMoveAlongAStar();
 
@@ -694,10 +693,19 @@ public class Setup {
             System.out.println("stop thread t1");
             t1.interrupt();
 
+
+            // now remake the a_star algorithm.
+                    // Make sure that all the previous date is gone
+            a_star = new A_star(redGhostPosX,redGhostPosY,pacmanPosX,pacmanPosY,root,nodeObject,blockSize, boxesX,boxesY);
+
+
         }
         else if (t1 == null)
         {
             System.out.println("no thread t1");
+            // make the first a_star algorithm.
+            a_star = new A_star(redGhostPosX,redGhostPosY,pacmanPosX,pacmanPosY,root,nodeObject,blockSize, boxesX,boxesY);
+
         }
     }
 
@@ -715,7 +723,7 @@ public class Setup {
 
 
             public void run() {
-                int i= 0;
+                int i = 0;
                 int pathLenght = a_star.getArrayFinalPathNodes().size();
                 while(true)
                 {
