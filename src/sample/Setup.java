@@ -691,44 +691,81 @@ public class Setup {
     private void maketheRedghostMoveAlongAStar() {
 
 
-        Timer t = new Timer();
+        /*Timer t = new Timer();
         t.schedule(new TimerTask() {
             @Override
             public void run() {
+        */
+
+        // make a new thread
+        final Thread t1 = new Thread(new Runnable() {
 
 
-                //System.out.println("each gost moves");
+            public void run() {
+                int i= 1;
+                while(i <10)
+                {
 
-                // find a direction and move that way.
+                    //System.out.println("each gost moves");
 
-                // make the ghost move through the list of where the path
-                // go though the list the oposite way.  so from currentnode witch is the goal and the to all "going to"'s.
+                    // find a direction and move that way.
 
-                //a_star.moveRedgostalongPath();
+                    // make the ghost move through the list of where the path
+                    // go though the list the oposite way.  so from currentnode witch is the goal and the to all "going to"'s.
 
-                NodeObject LastNodeInFinalpathArray = a_star.getlastNodeInFinalPathNodes();
-                redgostPosX= LastNodeInFinalpathArray.getUniqueXval();
-                redgostPosY=LastNodeInFinalpathArray.getUniqueYval();
-                System.out.println("LastNodeInFinalpathArray.getUniqueXval()"+ LastNodeInFinalpathArray.getUniqueXval());
-                System.out.println("LastNodeInFinalpathArray.getUniqueYval()"+ LastNodeInFinalpathArray.getUniqueYval());
 
-                System.out.println("redgostPosX "+redgostPosX);
-                System.out.println("redgostPosY "+redgostPosY);
-                // for some reason itdosent work outside thetime loop and the variables have to be redefined.
-                int relocateValX= redgostPosX;
-                int relocateValY= redgostPosY;
 
-                redGostRectangle.relocate(relocateValX*blockSize,relocateValY*blockSize);
+                    NodeObject LastNodeInFinalpathArray = a_star.getlastNodeInFinalPathNodes();
+                    redgostPosX= LastNodeInFinalpathArray.getUniqueXval();
+                    redgostPosY=LastNodeInFinalpathArray.getUniqueYval();
+                    System.out.println("LastNodeInFinalpathArray.getUniqueXval()"+ LastNodeInFinalpathArray.getUniqueXval());
+                    System.out.println("LastNodeInFinalpathArray.getUniqueYval()"+ LastNodeInFinalpathArray.getUniqueYval());
 
-                // delete the first value of the finalPathNodes.
+                    System.out.println("redgostPosX "+redgostPosX);
+                    System.out.println("redgostPosY "+redgostPosY);
+                    // for some reason itdosent work outside thetime loop and the variables have to be redefined.
+                    int relocateValX= redgostPosX;
+                    int relocateValY= redgostPosY;
+
+
+                    redGostRectangle.relocate(relocateValX*blockSize,relocateValY*blockSize);
+
+                    // delete the first value of the finalPathNodes.
+                    try {
+                        Thread.sleep(1000);                 //1000 milliseconds is one second.
+                    } catch(InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                    }
+
+
+                    System.out.println("t2 one sec interval " + i);
+                    i ++;
+                    if (i > 3){
+                        System.out.println("break out");
+                        System.out.println("stop thread");
+
+                        // this will stop the thread compleatly.
+                        Thread.currentThread().interrupt();
+                        break;
+
+                    }
+
+                }
+
+
+
+            }
+        });
+        t1.start();
+
+
 
 
 
             }
 
-
-        }, 0, 1000);
-    }
+    //}, 0, 1000);
+    //}
 
 
 }
