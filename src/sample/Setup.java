@@ -34,9 +34,13 @@ public class Setup {
     int pacmanPosX = pacmanStartPosX;
     int pacmanPosY = pacmanStartPosY ;
     private A_star a_star;
-    private int redGhostPosX = 7;
-    private int redGhostPosY= 13;
+    int redGhostPosX = 7;
+    int redGhostPosY= 13;
     Thread t1;
+    int redgostPosXUpdate;
+    int redgostPosYUpdate;
+    private Setup setup;
+    private boolean directionChanged= false;
 
 
     public Setup(Scene scene, Group root, NodeObject[][] nodeObject, int blockSize, int boxesX, int boxesY) {
@@ -563,7 +567,7 @@ public class Setup {
     public void startMover() {
 
         //a_star = new A_star(redGhostPosX,redGhostPosY,pacmanPosX,pacmanPosY,root,nodeObject,blockSize, boxesX,boxesY);
-        //maketheRedghostMoveAlongAStar();
+        //maketheRedghostMoveAlongAStarAndStartNewThread();
 
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 
@@ -676,12 +680,13 @@ public class Setup {
     }
 
     private void upDatePacman() {
+
         nodeObject[pacmanPosX][pacmanPosY].setRectColor(Color.YELLOW);
 
         nodeObject[pacmanPosX][pacmanPosY].makeitNotPacman();
-        // TODO delete this astar
+
         stopexistingTreadIfAny();
-        maketheRedghostMoveAlongAStar();
+        maketheRedghostMoveAlongAStarAndStartNewThread();
 
         //a_star.clearPath();
     }
@@ -690,13 +695,24 @@ public class Setup {
 
         if(t1 != null)
         {
+            directionChanged = true;
+            // stop the walking thread and start a new a-star.
             System.out.println("stop thread t1");
             t1.interrupt();
 
 
             // now remake the a_star algorithm.
                     // Make sure that all the previous date is gone
-            a_star = new A_star(redGhostPosX,redGhostPosY,pacmanPosX,pacmanPosY,root,nodeObject,blockSize, boxesX,boxesY);
+
+            System.out.println("if(t1 != null)");
+            //updatedghost
+            // delete the old information in astar first.
+            // the activate the astar.
+            a_star.showContentOfLists();
+            a_star.clearContentOfLists();
+
+            a_star = new A_star(setup,redgostPosXUpdate,redgostPosYUpdate,redGhostPosX,redGhostPosY,pacmanPosX,pacmanPosY,root,nodeObject,blockSize, boxesX,boxesY);
+            directionChanged = false;
 
 
         }
@@ -704,28 +720,25 @@ public class Setup {
         {
             System.out.println("no thread t1");
             // make the first a_star algorithm.
-            a_star = new A_star(redGhostPosX,redGhostPosY,pacmanPosX,pacmanPosY,root,nodeObject,blockSize, boxesX,boxesY);
+            a_star = new A_star(setup, redgostPosXUpdate, redgostPosYUpdate, redGhostPosX,redGhostPosY,pacmanPosX,pacmanPosY,root,nodeObject,blockSize, boxesX,boxesY);
 
         }
     }
 
-    private void maketheRedghostMoveAlongAStar() {
+    private void maketheRedghostMoveAlongAStarAndStartNewThread() {
 
 
-        /*Timer t = new Timer();
-        t.schedule(new TimerTask() {
-            @Override
-            public void run() {
-        */
 
-        // make a new thread
+
+        // make a new thread  so we can pause that thread, thats the way we make the gost move one space per sec.
          t1 = new Thread(new Runnable() {
 
 
             public void run() {
                 int i = 0;
                 int pathLenght = a_star.getArrayFinalPathNodes().size();
-                while(true)
+                // while direction not changed
+                while(!directionChanged)
                 {
 
                     //System.out.println("each gost moves");
@@ -743,11 +756,15 @@ public class Setup {
                     System.out.println("LastNodeInFinalpathArray.getUniqueXval()"+ LastNodeInFinalpathArray.getUniqueXval());
                     System.out.println("LastNodeInFinalpathArray.getUniqueYval()"+ LastNodeInFinalpathArray.getUniqueYval());
 
-                    System.out.println("redgostPosX "+redgostPosX);
-                    System.out.println("redgostPosY "+redgostPosY);
+                    System.out.println("walking redgostPosX "+redgostPosX);
+                    System.out.println("walking redgostPosY "+redgostPosY);
                     // for some reason itdosent work outside thetime loop and the variables have to be redefined.
                     int relocateValX= redgostPosX;
                     int relocateValY= redgostPosY;
+
+                    redgostPosXUpdate = redgostPosX;
+                    redgostPosYUpdate = redgostPosY;
+
 
 
                     redGostRectangle.relocate(relocateValX*blockSize,relocateValY*blockSize);
@@ -760,7 +777,6 @@ public class Setup {
                     }
 
 
-                    System.out.println("t2 one sec interval " + i);
                     i ++;
 
                     // TODO replace pathLenght by if (gost == pacman)??
@@ -782,14 +798,13 @@ public class Setup {
         });
         t1.start();
 
-
-
-
-
             }
 
-    //}, 0, 1000);
-    //}
+
+    public void setSetup(Setup setup) {
+        this.setup = setup;
+    }
+
 
 
 }

@@ -47,8 +47,8 @@ public class Main extends Application {
 
 
         // make startupclass
-        final Setup setup = new Setup(scene,root,nodeObject,blockSize, boxesX,boxesY);
-
+        Setup setup = new Setup(scene,root,nodeObject,blockSize, boxesX,boxesY);
+        setup.setSetup(setup);
 
 
         // when keys are pressed -source: http://stackoverflow.com/questions/29962395/how-to-write-a-keylistener-for-javafx

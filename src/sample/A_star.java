@@ -12,6 +12,9 @@ import java.util.TreeMap;
  * Created by v on 4/3/17.
  */
 public class A_star {
+    final Setup setup;
+    int redgostPosYUpdate;
+    int redgostPosXUpdate;
     NodeObject goalNode;
     // the neighbornodes that are not walls are added to list list for, where they later are evaluated, for finding lowest f.
     Map<NodeObject, Double> OpenlistUncheckedNeighbors = new HashMap<NodeObject, Double>();
@@ -37,8 +40,8 @@ public class A_star {
 
     int CurrentCenterNodeX;
     int CurrentCenterNodeY;
-    int startX=7;
-    int startY=13;
+    int startX;
+    int startY;
     NodeObject redGostNodeAstarStartingPos;
     //
     NodeObject currentCenterNode = redGostNodeAstarStartingPos;
@@ -60,6 +63,7 @@ public class A_star {
     private int yAbove;
     private int stepValueG = 1;
     private int redGhostPosX;
+    int testvalue;
     // start with the pacman location
     // now just testing.
     /*
@@ -73,8 +77,14 @@ public class A_star {
     */
 
 
-    public A_star(int redGhostPosX, int redGhostPosY, int pacmanPosX, int pacmanPosY, Group root, NodeObject[][] nodeObject, int blockSize, int boxesX, int boxesY){
+    public A_star(Setup setup, int redgostPosXUpdate, int redgostPosYUpdate, int redGhostPosX, int redGhostPosY, int pacmanPosX, int pacmanPosY, Group root, NodeObject[][] nodeObject, int blockSize, int boxesX, int boxesY){
 
+        this.redgostPosXUpdate = redgostPosXUpdate;
+        this.redgostPosYUpdate = redgostPosYUpdate;
+
+        System.out.println("testvalue astar  "+ testvalue);
+        System.out.println("astar start redgostPosXUpdate+ redgostPosYUpdate"+ redgostPosXUpdate+","+redgostPosYUpdate);
+        System.out.println("astar start redGhostPosX+ redgostPosY"+ redGhostPosX+","+redGhostPosY);
         //  the goal is pacman
         // the start is the ghost
         goalX = pacmanPosX;
@@ -82,11 +92,16 @@ public class A_star {
         startX = redGhostPosX;
         startY = redGhostPosY;
 
+
+
+        this.setup = setup;
         this.root=root;
         this.nodeObject = nodeObject;
         this.blockSize = blockSize;
         this.boxesX = boxesX;
         this.boxesY = boxesY;
+
+
 
         redGostNodeAstarStartingPos = nodeObject[startX][startY];
         currentCenterNode = nodeObject[startX][startY];
@@ -94,7 +109,8 @@ public class A_star {
         //Make  goal node.
         goalNode= nodeObject[goalX][goalY];
         nodeObject[goalX][goalY].setRectColor(Color.RED);
-        System.out.println("startnode  x,y"+ nodeObject[goalX][goalY].getUniqueXval() + ","+ nodeObject[goalX][goalY].getUniqueYval());
+        System.out.println(" pacman node x,y"+ nodeObject[goalX][goalY].getUniqueXval() + ","+ nodeObject[goalX][goalY].getUniqueYval());
+        System.out.println(" redGhost node x,y"+ nodeObject[startX][startY].getUniqueXval() + ","+ nodeObject[startX][startY].getUniqueYval());
 
 
         // replace "true" with is openlistempty..
@@ -129,6 +145,7 @@ public class A_star {
 
             // add only the starting node to the closed list in the beginning.
             // get the new node onto the closed list.
+            showContentOfLists();
             closedList.add(currentCenterNode);
 
 
@@ -595,5 +612,29 @@ public class A_star {
     public ArrayList<NodeObject> getArrayFinalPathNodes() {
         ArrayList<NodeObject> arrayFinalPathNodes = finalPathNodes;
         return arrayFinalPathNodes;
+    }
+
+    public void showContentOfLists() {
+
+        if(closedList == null)
+        {
+            System.out.println("closedList empty" );
+        }
+
+        for (int i = 0; i < closedList.size(); i++) {
+
+            System.out.println("show closedList"+closedList.get(i));
+        }
+    }
+
+    public void clearContentOfLists() {
+        System.out.println("clearList");
+        closedList.clear();
+        // now show
+        showContentOfLists();
+    }
+
+    public void sendTestvalue(int test) {
+        testvalue = test;
     }
 }

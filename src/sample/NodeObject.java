@@ -11,7 +11,6 @@ public class NodeObject {
 
     // the parent is the node it came from.
     // or a node to reach this node
-    NodeObject[][] parent;
     int blockSize;
     Group root;
     int x;
@@ -29,6 +28,8 @@ public class NodeObject {
 
 
     Rectangle rect;
+
+    // also known as parrent , by here named cameFrom.
     NodeObject cameFrom;
     // in the beginning they are all on openlist exept the startnode witch is on closed list, there for its should be false
     boolean isOnClosedList =false;
