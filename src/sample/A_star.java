@@ -79,6 +79,21 @@ public class A_star {
 
     public A_star(Setup setup, int redgostPosXUpdate, int redgostPosYUpdate, int redGhostPosX, int redGhostPosY, int pacmanPosX, int pacmanPosY, Group root, NodeObject[][] nodeObject, int blockSize, int boxesX, int boxesY){
 
+        //empty the old list of OpenlistUncheckedNeighbors
+        //OpenlistUncheckedNeighbors.clear();
+
+
+        // TODO should lists be cleared?? maybe not they seem empty at first
+        // check the size of the array's
+        System.out.println("OpenlistUncheckedNeighbors size "+ OpenlistUncheckedNeighbors.size());
+        System.out.println("closedList size "+ closedList.size());
+        System.out.println("openList size "+ openList.size());
+
+
+        //closedList.clear();
+        //openList.clear();
+
+
         this.redgostPosXUpdate = redgostPosXUpdate;
         this.redgostPosYUpdate = redgostPosYUpdate;
 
@@ -89,8 +104,9 @@ public class A_star {
         // the start is the ghost
         goalX = pacmanPosX;
         goalY = pacmanPosY;
-        startX = redGhostPosX;
-        startY = redGhostPosY;
+        startX = redgostPosXUpdate;
+        startY = redgostPosYUpdate;
+
 
 
 
@@ -338,6 +354,8 @@ public class A_star {
 
         //
         // TODO !!!find out how this works...
+
+
 
 
         Map.Entry<NodeObject, Double> min = Collections.min(OpenlistUncheckedNeighbors.entrySet(), new Comparator<Map.Entry<NodeObject, Double>>() {

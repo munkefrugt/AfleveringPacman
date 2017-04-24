@@ -37,8 +37,8 @@ public class Setup {
     int redGhostPosX = 7;
     int redGhostPosY= 13;
     Thread t1;
-    int redgostPosXUpdate;
-    int redgostPosYUpdate;
+    int redgostPosXUpdate =7;
+    int redgostPosYUpdate =13;
     private Setup setup;
     private boolean directionChanged= false;
 
