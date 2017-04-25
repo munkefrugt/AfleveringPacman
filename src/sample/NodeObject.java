@@ -33,6 +33,8 @@ public class NodeObject {
     NodeObject cameFrom;
     // in the beginning they are all on openlist exept the startnode witch is on closed list, there for its should be false
     boolean isOnClosedList =false;
+    // not food if false
+     boolean Food = false;
 
 
     public NodeObject(int x, int y, Group root, int blockSize) {
@@ -180,5 +182,19 @@ public class NodeObject {
 
     public void makeitNotPacman() {
         isNodePacman = false;
+    }
+
+    public void resetNode() {
+        isOnClosedList = false;
+    }
+
+    public void setFood() {
+        setRectColor(Color.GREEN);
+        Food = true;
+    }
+
+    public void setNotFood() {
+        setRectColor(Color.WHITE);
+        Food = false;
     }
 }

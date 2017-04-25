@@ -119,6 +119,8 @@ public class A_star {
 
 
 
+        // starts here
+
         redGostNodeAstarStartingPos = nodeObject[startX][startY];
         currentCenterNode = nodeObject[startX][startY];
         currentCenterNode.takeOfOpenList();
@@ -278,6 +280,9 @@ public class A_star {
         gostFollowThePath();
 
 
+    }
+
+    public void startNewAstar() {
     }
 
     private void gostFollowThePath() {
@@ -655,4 +660,6 @@ public class A_star {
     public void sendTestvalue(int test) {
         testvalue = test;
     }
+
+
 }
