@@ -8,6 +8,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+import javax.xml.soap.Node;
+
 /**
  * Created by v on 4/1/17.
  */
@@ -26,6 +28,10 @@ public class Setup  {
     private Rectangle pinkRect;
     private Rectangle blueRect;
     private Rectangle orangeRect;
+
+
+    int pinkGhostStartXPos = 10;
+    int pinkGhostStartYPos = 7;
 
     public int redgostPosX = 6* blockSize;
     public int redgostPosY = 2*blockSize;
@@ -806,8 +812,17 @@ public class Setup  {
                     // make the first a_star algorithm.
                     a_star = new A_star(setup, redgostPosXUpdate, redgostPosYUpdate, redGhostPosX,redGhostPosY,pacmanPosX,pacmanPosY,root,nodeObject,blockSize, boxesX,boxesY);
                     maketheRedghostMoveAlongAStarAndStartNewThread();
-                    breatfirst new Breathfirst();
-                    startNew_breathfirst()
+                    //BreathFirst breathFirst new BreathFirst();
+                    //startNew_breathfirst();
+
+                    // make BFS
+                    BFS bfs = new BFS(setup,nodeObject);
+
+
+
+                    bfs.start(nodeObject[pinkGhostStartXPos][pinkGhostStartYPos]);
+
+
 
                 }
 
@@ -831,6 +846,7 @@ public class Setup  {
             for(int x = 0; x < boxesX; x++) {
                 // here the objects are made.
                 nodeObject[x][y].resetNode();
+
 
                 // make all the  not walls white // by default not wall.
                 if(!nodeObject[x][y].isWall)

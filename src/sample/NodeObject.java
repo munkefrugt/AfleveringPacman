@@ -35,6 +35,8 @@ public class NodeObject {
     boolean isOnClosedList =false;
     // not food if false
      boolean Food = false;
+    // make true when visited used in BFS
+    public boolean visited = false;
 
 
     public NodeObject(int x, int y, Group root, int blockSize) {
