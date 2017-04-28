@@ -24,6 +24,7 @@ public class BFS  {
     //path for ghost to follow
     ArrayList<NodeObject> finalPathNodes;
     private NodeObject updatedRootNodeBFS;
+    private boolean colorOnBFS = false;
 
 
     public BFS(Setup setup, NodeObject[][] nodeObject){
@@ -34,11 +35,20 @@ public class BFS  {
 
         VisitedNodesList =new ArrayList<NodeObject>();
         queueWillOrHaveBeenVisited = new LinkedList<NodeObject>();
+        finalPathNodes = new ArrayList<NodeObject>();
     }
 
 
-    public void start(NodeObject startRootNode, NodeObject pacmanNode) {
+    public void start(NodeObject startRootNode, NodeObject pacmanNode, NodeObject BFSupdatedRootNode) {
 
+        System.out.println("start BFS");
+        this.pacmanNode = pacmanNode;
+
+
+
+
+
+        System.out.println("Log pacman is BFS"+pacmanNode.getUniqueXval()+","+pacmanNode.getUniqueYval());
         queueWillOrHaveBeenVisited.clear();
 
         // queue each link is getting removed each time there is
@@ -46,7 +56,11 @@ public class BFS  {
         // update the root node.
 
         NodeObject rootNode = startRootNode;
+        if(BFSupdatedRootNode != null){
+            System.out.println("BFSupdatedRootNode inside  BFS"+BFSupdatedRootNode.getUniqueXval()+","+BFSupdatedRootNode.getUniqueYval());
 
+            //rootNode = BFSupdatedRootNode; // TODO change this back see the error !!!!!!!!!!!   NEXT Step- fuck
+        }
 
 
 
@@ -131,14 +145,18 @@ public class BFS  {
         if(finalPathNodes != null ) {
             finalPathNodes.clear();
         }
-        finalPathNodes = new ArrayList<NodeObject>();
 
+
+        // follow back from the pacman node to get to the ghost node.
         while(currentCenterViewerNode.getcameFromBFS() != null)
+
         {
             finalPathNodes.add(currentCenterViewerNode);
-        // follow back from the pacman node to get to the ghost node.
 
-        currentCenterViewerNode.setRectColor(Color.BROWN);
+            if(colorOnBFS){
+
+            currentCenterViewerNode.setRectColor(Color.BROWN);
+            }
 
         // get previus node
         NodeObject previusNode = (NodeObject) currentCenterViewerNode.getcameFromBFS();
