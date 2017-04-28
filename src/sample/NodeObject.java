@@ -37,6 +37,7 @@ public class NodeObject {
      boolean Food = false;
     // make true when visited used in BFS
     public boolean visited = false;
+    NodeObject cameFromBFS;
 
 
     public NodeObject(int x, int y, Group root, int blockSize) {
@@ -130,6 +131,11 @@ public class NodeObject {
         this.cameFrom = currentCenterNode;
 
     }
+    public void setCameFromBFS(NodeObject currentCenterNode) {
+
+        this.cameFromBFS = currentCenterNode;
+
+    }
 
     public void makeitPacman() {
         isNodePacman = true;
@@ -198,5 +204,9 @@ public class NodeObject {
     public void setNotFood() {
         setRectColor(Color.WHITE);
         Food = false;
+    }
+
+    public NodeObject getcameFromBFS() {
+        return cameFromBFS;
     }
 }

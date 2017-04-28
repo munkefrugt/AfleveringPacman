@@ -49,6 +49,9 @@ public class Setup  {
     private boolean directionChanged= false;
     private boolean canInteruptNow;
     private boolean startThreadT1 = false;
+    NodeObject pacmanNode;
+     BFS bfs;
+    private boolean startThreadBFS = false;
 
 
     public Setup(Scene scene, Group root, NodeObject[][] nodeObject, int blockSize, int boxesX, int boxesY) {
@@ -592,7 +595,7 @@ public class Setup  {
         redGostRectangle.setFill(Color.RED);
 
         pinkRect = new Rectangle(blockSize,blockSize);
-        pinkRect.setFill(Color.PINK);
+        //pinkRect.setFill(Color.PINK);
 
         blueRect = new Rectangle(blockSize,blockSize);
         blueRect.setFill(Color.BLUE);
@@ -747,17 +750,20 @@ public class Setup  {
         // do this by pausing the thread t1.
 
 
-
+        pacmanNode = nodeObject[pacmanPosX][pacmanPosY];
 
         startThreadT1 = true;
+        startThreadBFS= true;
         System.out.println("update pacman");
-        nodeObject[pacmanPosX][pacmanPosY].setRectColor(Color.YELLOW);
+        //nodeObject[pacmanPosX][pacmanPosY].setRectColor(Color.YELLOW);
 
         nodeObject[pacmanPosX][pacmanPosY].makeitNotPacman();
 
         stopTreadt1AndstartNewA_star();
         //maketheRedghostMoveAlongAStarAndStartNewThread();
 
+        // make pacman yellow
+        pacmanNode.setRectColor(Color.YELLOW);
         //a_star.clearPath();
     }
 
@@ -800,6 +806,8 @@ public class Setup  {
                         a_star = new A_star(setup,redgostPosXUpdate,redgostPosYUpdate,redGhostPosX,redGhostPosY,pacmanPosX,pacmanPosY,root,nodeObject,blockSize, boxesX,boxesY);
                         directionChanged = false;
 
+                        bfs.start(nodeObject[pinkGhostStartXPos][pinkGhostStartYPos],pacmanNode);
+
 
 
 
@@ -812,16 +820,17 @@ public class Setup  {
                     // make the first a_star algorithm.
                     a_star = new A_star(setup, redgostPosXUpdate, redgostPosYUpdate, redGhostPosX,redGhostPosY,pacmanPosX,pacmanPosY,root,nodeObject,blockSize, boxesX,boxesY);
                     maketheRedghostMoveAlongAStarAndStartNewThread();
+
                     //BreathFirst breathFirst new BreathFirst();
                     //startNew_breathfirst();
 
                     // make BFS
-                    BFS bfs = new BFS(setup,nodeObject);
+                     bfs = new BFS(setup,nodeObject);
 
 
 
-                    bfs.start(nodeObject[pinkGhostStartXPos][pinkGhostStartYPos]);
-
+                    bfs.start(nodeObject[pinkGhostStartXPos][pinkGhostStartYPos],pacmanNode);
+                    PinkghostMoveAlongBFSAndStartNewThread();
 
 
                 }
@@ -835,6 +844,100 @@ public class Setup  {
         });
         t3.start();*/
 
+
+    }
+
+    private void PinkghostMoveAlongBFSAndStartNewThread() {
+        // make new thread so the ghost can be timed.
+
+        Thread threadBFS = new Thread(new Runnable() {
+
+
+            public void run() {
+                System.out.println("start t1");
+                if(startThreadBFS)
+                {
+                    // never stop
+                    while(true)
+                    {
+                        BFSThreadMethodLoop();
+                    }
+                }
+                else System.out.println("method not ready yet");
+
+            }
+        });
+        threadBFS.start();
+
+
+    }
+
+    private void BFSThreadMethodLoop() {
+            /*
+        int i = 0;
+        // while direction not changed
+        while(!directionChanged)
+        {
+            int pathLenght = bfs.getArrayFinalPathNodes().size();
+
+            //System.out.println("each gost moves");
+
+            // find a direction and move that way.
+
+            // make the ghost move through the list of where the path
+            // go though the list the oposite way.  so from currentnode witch is the goal and the to all "going to"'s.
+
+
+
+            NodeObject LastNodeInFinalpathArray = bfs.getlastNodeInFinalPathNodesAndRemove();
+            redgostPosX= LastNodeInFinalpathArray.getUniqueXval();
+            redgostPosY=LastNodeInFinalpathArray.getUniqueYval();
+            System.out.println("LastNodeInFinalpathArray.getUniqueXval()"+ LastNodeInFinalpathArray.getUniqueXval());
+            System.out.println("LastNodeInFinalpathArray.getUniqueYval()"+ LastNodeInFinalpathArray.getUniqueYval());
+
+            System.out.println("walking redgostPosX "+redgostPosX);
+            System.out.println("walking redgostPosY "+redgostPosY);
+            // for some reason itdosent work outside thetime loop and the variables have to be redefined.
+            int relocateValX= redgostPosX;
+            int relocateValY= redgostPosY;
+
+            redgostPosXUpdate = redgostPosX;
+            redgostPosYUpdate = redgostPosY;
+
+
+
+            redGostRectangle.relocate(relocateValX*blockSize,relocateValY*blockSize);
+
+            // delete the first value of the finalPathNodes.
+            try {
+                canInteruptNow = false;// TODO DELETE THIS?
+                Thread.sleep(1000);                 //1000 milliseconds is one second.
+
+                System.out.println("log, sleep inthread t1");
+                //set in some kind of thing that its okay to interupt.
+                canInteruptNow  = true; // TODO DELETE THIS?
+
+            } catch(InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+
+
+            i ++;
+
+            // TODO replace pathLenght by if (gost == pacman)??
+            if (i == pathLenght){
+                System.out.println("break out");
+                System.out.println("stop thread");
+
+                //
+                System.out.println("you are eaten. ");
+                // this will stop the thread compleatly.
+                //Thread.currentThread().interrupt();
+                break;
+
+            }
+
+        }*/
 
     }
 

@@ -12,6 +12,11 @@ import java.util.TreeMap;
  * Created by v on 4/3/17.
  */
 public class A_star {
+
+
+    boolean showAstarpathWithColor = false;
+
+
     final Setup setup;
     int redgostPosYUpdate;
     int redgostPosXUpdate;
@@ -324,11 +329,16 @@ public class A_star {
 
 
 
-                        currentCenterNode.setRectColor(Color.ORANGE);
+
+
                         // change to next node.
                         NodeObject previusNode = (NodeObject) currentCenterNode.getcameFrom();
 
+                        if(showAstarpathWithColor)
+                        {
+
                         previusNode.setRectColor(Color.ORANGE);
+                        }
 
                         System.out.println("previusNode (x,y)  "+previusNode.getUniqueXval()+","+previusNode.getUniqueYval());
 
@@ -379,7 +389,12 @@ public class A_star {
 
         // set it new centerNode
         currentCenterNode = newLowestNode;
+
+
+        if(showAstarpathWithColor)
+        {
         currentCenterNode.setRectColor(Color.PINK);
+        }
 
         closedList.add(newLowestNode);
 
@@ -434,7 +449,10 @@ public class A_star {
 
             nodeAbove.setCameFrom(currentCenterNode);
             System.out.println("node above not wall");
-            nodeAbove.setRectColor(Color.BLUE);
+                if(showAstarpathWithColor)
+                {
+                nodeAbove.setRectColor(Color.BLUE);
+                }
             int h= getAndcalculateH(nodeAbove);
             System.out.println("h->Astar = "+h);
             // store h in node.
@@ -484,7 +502,14 @@ public class A_star {
             // set camefrom
             nodebelow.setCameFrom(currentCenterNode);
             int nodeUnderY = nodeObject[CurrentCenterNodeX][CurrentCenterNodeY+1].getUniqueYval();
+
+            if(showAstarpathWithColor)
+            {
+
             nodeObject[CurrentCenterNodeX][CurrentCenterNodeY+1].setRectColor(Color.BLUE);
+            }
+
+
             System.out.println("abovenodeY" + nodeUnderY);
 
             // calculate  first :
@@ -526,7 +551,11 @@ public class A_star {
             // set camefrom
             nodeLeft.setCameFrom(currentCenterNode);
             System.out.println("node left not wall");
+            if(showAstarpathWithColor)
+            {
+
             nodeObject[CurrentCenterNodeX-1][CurrentCenterNodeY].setRectColor(Color.BLUE);
+            }
 
             int h= getAndcalculateH(nodeObject[CurrentCenterNodeX-1][CurrentCenterNodeY]);
             nodeLeft.calculateG(stepValueG);
@@ -557,7 +586,12 @@ public class A_star {
             noderight.setCameFrom(currentCenterNode);
 
             System.out.println("node right not wall");
+
+            if(showAstarpathWithColor)
+            {
+
             nodeObject[CurrentCenterNodeX+1][CurrentCenterNodeY].setRectColor(Color.BLUE);
+            }
 
             int h= getAndcalculateH(nodeObject[CurrentCenterNodeX+1][CurrentCenterNodeY]);
 

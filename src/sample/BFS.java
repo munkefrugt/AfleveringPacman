@@ -1,5 +1,8 @@
 package sample;
 
+import javafx.scene.paint.Color;
+
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -8,57 +11,20 @@ import java.util.LinkedList;
 // inspired by https://gist.github.com/gennad/791932
 
     // BFS Breath First Search.
-public class BFS {
+public class BFS  {
 
 
      NodeObject[][] nodeObject;
     Setup setup;
     NodeObject currentCenterViewerNode;
+    LinkedList<NodeObject> queueWillOrHaveBeenVisited;
+    NodeObject pacmanNode;
+    ArrayList<NodeObject> VisitedNodesList;
 
     public BFS(Setup setup, NodeObject[][] nodeObject){
 
         this.nodeObject = nodeObject;
         this.setup = setup;
-        /*
-                wiki version :
-             Breadth-First-Search(Graph, root):
-             will display the nodes
-
-            // s is for result
-            create empty set S
-            // Q queue is for the next element to be checked,
-            //each element that is first in the Q is the new one to start from
-
-            create empty queue Q
-
-            // the first element gets added to the result
-            add root to S
-
-            // add the first element since the root is forsure the first.
-            Q.enqueue(root)
-
-        // as long as there is soething in the Queue do following.
-            while Q is not empty:
-            // take the current node that is beeing checked of the queue
-                current = Q.dequeue()
-                if current is the goal:
-                    return current
-
-                    // check that each node that is "child"/ "adjacent" to the current node.
-                for each node n that is adjacent to current:
-                    if n is not in S:
-                        add n to S
-                        n.parent = current
-                        Q.enqueue(n)
-
-
-         */
-
-
-       // start();
-        //
-        // */
-
 
 
 
@@ -67,37 +33,12 @@ public class BFS {
 
 
 
-    public void start(NodeObject startRootNode) {
-        /*
-        // go through each node with BFS
+    public void start(NodeObject startRootNode, NodeObject pacmanNode) {
 
-        // BFS uses Queue data structure
-        Queue queue = new LinkedList();
-        // add the root node
-        queue.add(this.rootNode);
-        // print it
-        printNode(this.rootNode);
-        // marke root node as visited
-        rootNode.visited = true;
-        // while the queue is not empty go through it and
-
-        // good explanation //
-        while(!queue.isEmpty()) {
-
-        // take the newest node.
-            Node node = (Node)queue.remove();
-            Node child=null;
-            while((child=getUnvisitedChildNode(node))!=null) {
-                child.visited=true;
-                printNode(child);
-                queue.add(child);
-            }
-        // Clear visited property of nodes
-        clearNodes();
-        }*/
 
         // queue each link is getting removed each time there is
-        LinkedList<NodeObject> queueWillOrHaveBeenVisited = new LinkedList<NodeObject>();
+        queueWillOrHaveBeenVisited = new LinkedList<NodeObject>();
+        VisitedNodesList =new ArrayList<NodeObject>();
 
 
 
@@ -110,6 +51,7 @@ public class BFS {
         // marke root node as visited
         rootNode.visited = true;
 
+        VisitedNodesList.add(rootNode);
         // while the queue is not empty go through it and
 
         // good explanation //
@@ -125,55 +67,162 @@ public class BFS {
 
         // find the first children and add them to the queue. after that you start finding the rest and take them of one by one as you go through.
 
-        findChildrenOfNode();
-
-        /*while(!queueWillOrHaveBeenVisited.isEmpty()) {
 
 
-            // take the first element from the queue and look for its neighbors / children..
+       // while(!queueWillOrHaveBeenVisited.isEmpty()) { // TODO change it back.
+        int i = 0;
+        while(!queueWillOrHaveBeenVisited.isEmpty()) {
 
 
-
-            /*if(currentCenterViewerNode == pacmanNode){
-                System.out.println("pink found found pacman");
+            if(currentCenterViewerNode == pacmanNode){
+                System.out.println("pink found found pacman, BFS");
+                // now break out. of while loop
                 break;
-            }*/
+            }
+
+            // take the first element of the queue and look for its neighbors / children..
+            // set the new currentCenterViewerNode, the first node.
+            currentCenterViewerNode = queueWillOrHaveBeenVisited.getFirst();
+            //remove first
+
+            queueWillOrHaveBeenVisited.removeFirst();
+            // mark the currentCenterViewerNode as visited.
+            currentCenterViewerNode.visited = true;
+            VisitedNodesList.add(currentCenterViewerNode);
+
+            //currentCenterViewerNode.setRectColor(Color.YELLOW);
+
+            System.out.println("searching childnodes");
+            findChildrenOfNode();
+
+            //
+
+            i++;
 
 
 
 
-        //}
+        }
 
 
 
 
+        // clear visited
+        clearNodes();
+
+        // make path from the pink host to pacman
 
 
 
+        makePath();
 
+
+    }
+
+    private void makePath() {
+
+        while(currentCenterViewerNode.getcameFromBFS() != null)
+        {
+        // follow back from the pacman node to get to the ghost node.
+
+        currentCenterViewerNode.setRectColor(Color.BROWN);
+
+        // get previus node
+        NodeObject previusNode = (NodeObject) currentCenterViewerNode.getcameFromBFS();
+
+        previusNode.setRectColor(Color.BROWN);
+
+
+
+        System.out.println("BFS previusNode (x,y)  "+previusNode.getUniqueXval()+","+previusNode.getUniqueYval());
+
+
+
+        // change the previus node to currentcenterNode
+        currentCenterViewerNode =  previusNode;
+
+        }
+
+
+    }
+
+    public void clearNodes() {
+        // clear each visited node.
+        for (int i = 0; i < VisitedNodesList.size(); i++) {
+            // make them all visited = false
+            VisitedNodesList.get(i).visited = false;
+
+        }
 
     }
 
     public void findChildrenOfNode() {
 
-        // witch nodes are adjecent or children to this one?
+            // witch nodes are adjecent or children to this one?
 
-            // is the node over under or left right a path node? is so make it a child
+                // is the node over under or left right a path node? is so make it a child
 
-        // first get the coordinates of the node currentNode.
+            // first get the coordinates of the node currentNode.
 
-        int x =currentCenterViewerNode.getUniqueXval();
-        int y = currentCenterViewerNode.getUniqueYval();
+            int x =currentCenterViewerNode.getUniqueXval();
+            int y = currentCenterViewerNode.getUniqueYval();
 
 
 
-        //down?
-        int ycheck = y-1;
-        if (!nodeObject[x][ycheck].isWall){
-            System.out.println("BFS not wall"+ x+","+ ycheck);
-            // if not visited && not wall.  make it child
+            //Note: coordinate system is wierd y goes from up t down , opposite of normal. therefore y-1 for up direction.
+            //not wall and not visited , visited = false by default.
 
-        }
+
+
+
+            //up
+            if (!nodeObject[x][y-1].isWall && !nodeObject[x][y-1].visited ){
+                System.out.println("BFS up not wall not visited"+ x+","+ (y-1));
+                // if not visited && not wall.  make it child
+                // now ad it to queueWillOrHaveBeenVisited
+                queueWillOrHaveBeenVisited.add(nodeObject[x][y-1]);
+                // make camefrom / parrent
+                nodeObject[x][y-1].setCameFromBFS(currentCenterViewerNode);
+
+
+            }
+            // down
+            if (!nodeObject[x][y+1].isWall && !nodeObject[x][y+1].visited){
+                    System.out.println("BFS down not wall"+ x+","+ (y-1));
+                // if not visited && not wall.  make it child
+                    // now add it to queueWillOrHaveBeenVisited
+                    queueWillOrHaveBeenVisited.add(nodeObject[x][y+1]);
+
+                // make camefrom / parrent
+                nodeObject[x][y+1].setCameFromBFS(currentCenterViewerNode);
+
+                }
+
+            // left
+            if (!nodeObject[x-1][y].isWall&& !nodeObject[x-1][y].visited){
+                System.out.println("BFS left not wall"+ (x-1)+","+ y);
+                // if not visited && not wall.  make it child
+                // now add it to queueWillOrHaveBeenVisited
+                queueWillOrHaveBeenVisited.add(nodeObject[x-1][y]);
+
+                // make camefrom / parrent
+                nodeObject[x-1][y].setCameFromBFS(currentCenterViewerNode);
+
+            }
+
+            //right
+            if (!nodeObject[x+1][y].isWall&& !nodeObject[x+1][y].visited){
+                System.out.println("BFS right not wall"+ (x+1)+","+ y);
+
+                // if not visited && not wall.  make it child
+                // now add it to queueWillOrHaveBeenVisited
+                queueWillOrHaveBeenVisited.add(nodeObject[x+1][y]);
+                // make camefrom / parrent
+                nodeObject[x+1][y].setCameFromBFS(currentCenterViewerNode);
+
+
+            }
+            else System.out.println("BFS, no more children to add for this Node");
 
 
 
