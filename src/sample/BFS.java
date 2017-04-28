@@ -18,8 +18,12 @@ public class BFS  {
     Setup setup;
     NodeObject currentCenterViewerNode;
     LinkedList<NodeObject> queueWillOrHaveBeenVisited;
+    LinkedList<NodeObject> queueMakingpathforGhost;
     NodeObject pacmanNode;
     ArrayList<NodeObject> VisitedNodesList;
+    //path for ghost to follow
+    ArrayList<NodeObject> finalPathNodes;
+
 
     public BFS(Setup setup, NodeObject[][] nodeObject){
 
@@ -119,10 +123,19 @@ public class BFS  {
 
     }
 
+
+
     private void makePath() {
+
+        // start remove last list.
+        if(finalPathNodes != null ) {
+            finalPathNodes.clear();
+        }
+        finalPathNodes = new ArrayList<NodeObject>();
 
         while(currentCenterViewerNode.getcameFromBFS() != null)
         {
+            finalPathNodes.add(currentCenterViewerNode);
         // follow back from the pacman node to get to the ghost node.
 
         currentCenterViewerNode.setRectColor(Color.BROWN);
@@ -140,6 +153,7 @@ public class BFS  {
 
         // change the previus node to currentcenterNode
         currentCenterViewerNode =  previusNode;
+
 
         }
 
@@ -228,5 +242,19 @@ public class BFS  {
 
 
 
+    }
+
+    public ArrayList<NodeObject> getFinalPathNodes() {
+
+        return finalPathNodes;
+    }
+
+    public NodeObject BFSgetlastNodeInFinalPathNodesAndRemove() {
+        // get last nodeObject in the list.
+
+        // finalPathNodes.size()-1 because the first index number is 0.
+        NodeObject lastinfinalPathNodes= finalPathNodes.get(finalPathNodes.size()-1);
+        finalPathNodes.remove(finalPathNodes.size()-1);
+        return lastinfinalPathNodes;
     }
 }

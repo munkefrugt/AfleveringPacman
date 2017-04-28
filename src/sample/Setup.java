@@ -8,8 +8,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-import javax.xml.soap.Node;
-
 /**
  * Created by v on 4/1/17.
  */
@@ -25,6 +23,9 @@ public class Setup  {
     int blockSize;
     NodeObject[][] nodeObject;
     private Rectangle redGostRectangle;
+
+    Rectangle pinkGostRectangle;
+
     private Rectangle pinkRect;
     private Rectangle blueRect;
     private Rectangle orangeRect;
@@ -52,6 +53,7 @@ public class Setup  {
     NodeObject pacmanNode;
      BFS bfs;
     private boolean startThreadBFS = false;
+
 
 
     public Setup(Scene scene, Group root, NodeObject[][] nodeObject, int blockSize, int boxesX, int boxesY) {
@@ -368,21 +370,6 @@ public class Setup  {
         }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         // boarders
         for(int y = 0; y < boxesY; y++) {
             makewallElement(0,y);
@@ -594,8 +581,8 @@ public class Setup  {
         redGostRectangle = new Rectangle(0,0,blockSize,blockSize);
         redGostRectangle.setFill(Color.RED);
 
-        pinkRect = new Rectangle(blockSize,blockSize);
-        //pinkRect.setFill(Color.PINK);
+        pinkGostRectangle = new Rectangle(0,0,blockSize,blockSize);
+        pinkGostRectangle.setFill(Color.PINK);
 
         blueRect = new Rectangle(blockSize,blockSize);
         blueRect.setFill(Color.BLUE);
@@ -604,28 +591,14 @@ public class Setup  {
 
 
 
-        root.getChildren().addAll(blueRect,pinkRect, redGostRectangle,orangeRect);
+        root.getChildren().addAll(blueRect,pinkGostRectangle, redGostRectangle,orangeRect);
 
 
 
     }
 
 
-    public void startGost() {
-       /* Timer t = new Timer();
-        t.schedule(new TimerTask() {
-            @Override
-            public void run() {
 
-
-                // find a direction and move that way.
-
-            }
-
-
-        }, 0, 1000);
-        */
-    }
 
 
 
@@ -759,7 +732,7 @@ public class Setup  {
 
         nodeObject[pacmanPosX][pacmanPosY].makeitNotPacman();
 
-        stopTreadt1AndstartNewA_star();
+        stopTreadt1AndstartSearchMethods();
         //maketheRedghostMoveAlongAStarAndStartNewThread();
 
         // make pacman yellow
@@ -767,7 +740,7 @@ public class Setup  {
         //a_star.clearPath();
     }
 
-    private void stopTreadt1AndstartNewA_star() {
+    private void stopTreadt1AndstartSearchMethods() {
 
         /*Thread t3 = new Thread(new Runnable() {
 
@@ -855,8 +828,15 @@ public class Setup  {
 
             public void run() {
                 System.out.println("start t1");
+
                 if(startThreadBFS)
                 {
+                    try {
+                        Thread.sleep(1000);                 //1000 milliseconds is one second.
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
                     // never stop
                     while(true)
                     {
@@ -873,12 +853,12 @@ public class Setup  {
     }
 
     private void BFSThreadMethodLoop() {
-            /*
+
         int i = 0;
         // while direction not changed
         while(!directionChanged)
         {
-            int pathLenght = bfs.getArrayFinalPathNodes().size();
+            int pathLenght = bfs.getFinalPathNodes().size();
 
             //System.out.println("each gost moves");
 
@@ -889,31 +869,24 @@ public class Setup  {
 
 
 
-            NodeObject LastNodeInFinalpathArray = bfs.getlastNodeInFinalPathNodesAndRemove();
-            redgostPosX= LastNodeInFinalpathArray.getUniqueXval();
-            redgostPosY=LastNodeInFinalpathArray.getUniqueYval();
+
+            NodeObject LastNodeInFinalpathArray = bfs.BFSgetlastNodeInFinalPathNodesAndRemove();
+            int relocateValX= LastNodeInFinalpathArray.getUniqueXval();
+            int relocateValY=LastNodeInFinalpathArray.getUniqueYval();
+
             System.out.println("LastNodeInFinalpathArray.getUniqueXval()"+ LastNodeInFinalpathArray.getUniqueXval());
             System.out.println("LastNodeInFinalpathArray.getUniqueYval()"+ LastNodeInFinalpathArray.getUniqueYval());
 
-            System.out.println("walking redgostPosX "+redgostPosX);
-            System.out.println("walking redgostPosY "+redgostPosY);
-            // for some reason itdosent work outside thetime loop and the variables have to be redefined.
-            int relocateValX= redgostPosX;
-            int relocateValY= redgostPosY;
-
-            redgostPosXUpdate = redgostPosX;
-            redgostPosYUpdate = redgostPosY;
 
 
-
-            redGostRectangle.relocate(relocateValX*blockSize,relocateValY*blockSize);
+            pinkGostRectangle.relocate(relocateValX*blockSize,relocateValY*blockSize);
 
             // delete the first value of the finalPathNodes.
             try {
                 canInteruptNow = false;// TODO DELETE THIS?
                 Thread.sleep(1000);                 //1000 milliseconds is one second.
 
-                System.out.println("log, sleep inthread t1");
+                System.out.println("log, sleep inthread BFS");
                 //set in some kind of thing that its okay to interupt.
                 canInteruptNow  = true; // TODO DELETE THIS?
 
@@ -937,7 +910,7 @@ public class Setup  {
 
             }
 
-        }*/
+        }
 
     }
 

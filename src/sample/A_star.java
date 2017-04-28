@@ -666,6 +666,7 @@ public class A_star {
     }
 
 
+
     public ArrayList<NodeObject> getArrayFinalPathNodes() {
         ArrayList<NodeObject> arrayFinalPathNodes = finalPathNodes;
         return arrayFinalPathNodes;

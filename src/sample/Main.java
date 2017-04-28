@@ -161,7 +161,7 @@ public class Main extends Application {
         primaryStage.show();
 
         //setup.CreateNewTimer();
-        setup.startGost();
+        //setup.startGost();
         //setup.pacmanTimer();
         final AnimationTimer timer = new AnimationTimer() {
             @Override
