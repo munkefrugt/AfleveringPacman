@@ -53,7 +53,10 @@ public class Setup  {
     NodeObject pacmanNode;
      BFS bfs;
     private boolean startThreadBFS = false;
-
+    private NodeObject BFSrootNode;
+    private NodeObject BFSupdatedRootNode;
+    private boolean foundPacman = false;
+    private NodeObject redGostNode;
 
 
     public Setup(Scene scene, Group root, NodeObject[][] nodeObject, int blockSize, int boxesX, int boxesY) {
@@ -719,6 +722,10 @@ public class Setup  {
 
     private void upDatePacman() {
 
+        if(pacmanNode != redGostNode)
+        {
+            System.out.println("endgame , log- update pacman.");
+        }
         // freeze the gost positions while the pacman moves 1 step.
         // do this by pausing the thread t1.
 
@@ -778,9 +785,9 @@ public class Setup  {
                         a_star.startNewAstar();
                         a_star = new A_star(setup,redgostPosXUpdate,redgostPosYUpdate,redGhostPosX,redGhostPosY,pacmanPosX,pacmanPosY,root,nodeObject,blockSize, boxesX,boxesY);
                         directionChanged = false;
-
-                        bfs.start(nodeObject[pinkGhostStartXPos][pinkGhostStartYPos],pacmanNode);
-
+                    //BFSrootNode= BFSupdatedRootNode;
+                    System.out.println("pinkXY"+pinkGhostStartXPos+","+pinkGhostStartYPos);
+                        bfs.start(BFSrootNode,pacmanNode);
 
 
 
@@ -801,8 +808,9 @@ public class Setup  {
                      bfs = new BFS(setup,nodeObject);
 
 
+                    BFSrootNode = nodeObject[pinkGhostStartXPos][pinkGhostStartYPos];
 
-                    bfs.start(nodeObject[pinkGhostStartXPos][pinkGhostStartYPos],pacmanNode);
+                    bfs.start(BFSrootNode,pacmanNode);
                     PinkghostMoveAlongBFSAndStartNewThread();
 
 
@@ -831,6 +839,7 @@ public class Setup  {
 
                 if(startThreadBFS)
                 {
+                    // make one tiny breake in begining so the red ghost moves before the pink.
                     try {
                         Thread.sleep(1000);                 //1000 milliseconds is one second.
                     } catch (InterruptedException e) {
@@ -838,10 +847,66 @@ public class Setup  {
                     }
 
                     // never stop
-                    while(true)
-                    {
-                        BFSThreadMethodLoop();
-                    }
+
+                        int i = 0;
+
+                        while(!directionChanged)
+                        {
+                            int pathLenght = bfs.getFinalPathNodes().size();
+
+                            //System.out.println("each gost moves");
+
+                            // find a direction and move that way.
+
+                            // make the ghost move through the list of where the path
+                            // go though the list the oposite way.  so from currentnode witch is the goal and the to all "going to"'s.
+
+
+
+
+                            NodeObject LastNodeInFinalpathArray = bfs.BFSgetlastNodeInFinalPathNodesAndRemove();
+
+                            // int relocateValX
+                            int pinkGhostStartXPos= LastNodeInFinalpathArray.getUniqueXval();
+                            int pinkGhostStartYPos=LastNodeInFinalpathArray.getUniqueYval();
+
+                            //System.out.println("LastNodeInFinalpathArray.getUniqueXval()"+ LastNodeInFinalpathArray.getUniqueXval());
+                            //System.out.println("LastNodeInFinalpathArray.getUniqueYval()"+ LastNodeInFinalpathArray.getUniqueYval());
+
+                            //BFSupdatedRootNode =nodeObject[pinkGhostStartXPos][pinkGhostStartYPos];
+                            //bfs.setupdatedRootNodeBFS(updatedRootNodeBFS);
+                            pinkGostRectangle.relocate(pinkGhostStartXPos*blockSize,pinkGhostStartYPos*blockSize);
+
+                            // delete the first value of the finalPathNodes.
+                            try {
+                                canInteruptNow = false;// TODO DELETE THIS?
+                                Thread.sleep(1000);                 //1000 milliseconds is one second.
+
+                                System.out.println("log, sleep inthread BFS");
+                                //set in some kind of thing that its okay to interupt.
+                                canInteruptNow  = true; // TODO DELETE THIS?
+
+                            } catch(InterruptedException ex) {
+                                Thread.currentThread().interrupt();
+                            }
+
+
+                            i ++;
+
+                            // TODO replace pathLenght by if (gost == pacman)??
+                            if (i == pathLenght){
+                                System.out.println("break out");
+                                System.out.println("stop thread");
+
+                                //
+                                System.out.println("you are eaten. ");
+                                // this will stop the thread compleatly.
+                                //Thread.currentThread().interrupt();
+                                break;
+
+                            }
+                        }
+
                 }
                 else System.out.println("method not ready yet");
 
@@ -856,61 +921,7 @@ public class Setup  {
 
         int i = 0;
         // while direction not changed
-        while(!directionChanged)
-        {
-            int pathLenght = bfs.getFinalPathNodes().size();
 
-            //System.out.println("each gost moves");
-
-            // find a direction and move that way.
-
-            // make the ghost move through the list of where the path
-            // go though the list the oposite way.  so from currentnode witch is the goal and the to all "going to"'s.
-
-
-
-
-            NodeObject LastNodeInFinalpathArray = bfs.BFSgetlastNodeInFinalPathNodesAndRemove();
-            int relocateValX= LastNodeInFinalpathArray.getUniqueXval();
-            int relocateValY=LastNodeInFinalpathArray.getUniqueYval();
-
-            System.out.println("LastNodeInFinalpathArray.getUniqueXval()"+ LastNodeInFinalpathArray.getUniqueXval());
-            System.out.println("LastNodeInFinalpathArray.getUniqueYval()"+ LastNodeInFinalpathArray.getUniqueYval());
-
-
-
-            pinkGostRectangle.relocate(relocateValX*blockSize,relocateValY*blockSize);
-
-            // delete the first value of the finalPathNodes.
-            try {
-                canInteruptNow = false;// TODO DELETE THIS?
-                Thread.sleep(1000);                 //1000 milliseconds is one second.
-
-                System.out.println("log, sleep inthread BFS");
-                //set in some kind of thing that its okay to interupt.
-                canInteruptNow  = true; // TODO DELETE THIS?
-
-            } catch(InterruptedException ex) {
-                Thread.currentThread().interrupt();
-            }
-
-
-            i ++;
-
-            // TODO replace pathLenght by if (gost == pacman)??
-            if (i == pathLenght){
-                System.out.println("break out");
-                System.out.println("stop thread");
-
-                //
-                System.out.println("you are eaten. ");
-                // this will stop the thread compleatly.
-                //Thread.currentThread().interrupt();
-                break;
-
-            }
-
-        }
 
     }
 
@@ -952,11 +963,17 @@ public class Setup  {
                         System.out.println("start t1");
                         if(startThreadT1)
                         {
-                            // never stop
-                        while(true)
-                        {
-                        t1ThreadMethodLoop();
-                        }
+
+
+                            while(!foundPacman)
+                            {
+
+                            t1ThreadMethodLoop();
+                                System.out.println("loop ended found pacman");
+
+
+                            }
+                            //System.out.println("end game");
                         }
                         else System.out.println("method not ready yet");
 
@@ -974,7 +991,7 @@ public class Setup  {
 
         int i = 0;
         // while direction not changed
-        while(!directionChanged)
+        while(!directionChanged && !foundPacman)
         {
         int pathLenght = a_star.getArrayFinalPathNodes().size();
 
@@ -986,8 +1003,14 @@ public class Setup  {
             // go though the list the oposite way.  so from currentnode witch is the goal and the to all "going to"'s.
 
 
-
-            NodeObject LastNodeInFinalpathArray = a_star.getlastNodeInFinalPathNodesAndRemove();
+            NodeObject LastNodeInFinalpathArray;
+            // if array array is empty. is empty ; true if length is 0 otherwise false.
+            if(a_star.finalPathNodes.isEmpty()){
+                System.out.println("array is empty game over");
+                foundPacman = true;
+                break;
+            }
+            LastNodeInFinalpathArray = a_star.getlastNodeInFinalPathNodesAndRemove();
             redgostPosX= LastNodeInFinalpathArray.getUniqueXval();
             redgostPosY=LastNodeInFinalpathArray.getUniqueYval();
             System.out.println("LastNodeInFinalpathArray.getUniqueXval()"+ LastNodeInFinalpathArray.getUniqueXval());
@@ -1002,7 +1025,7 @@ public class Setup  {
             redgostPosXUpdate = redgostPosX;
             redgostPosYUpdate = redgostPosY;
 
-
+            redGostNode = nodeObject[redgostPosXUpdate][redgostPosYUpdate];
 
             redGostRectangle.relocate(relocateValX*blockSize,relocateValY*blockSize);
 
@@ -1029,6 +1052,8 @@ public class Setup  {
 
                 //
                 System.out.println("you are eaten. ");
+                foundPacman = true;
+                System.out.println("********** Looser *************************");
                 // this will stop the thread compleatly.
                 //Thread.currentThread().interrupt();
                 break;

@@ -662,6 +662,9 @@ public class A_star {
             // finalPathNodes.size()-1 because the first index number is 0.
             NodeObject firstXinfinalPathNodes= finalPathNodes.get(finalPathNodes.size()-1);
         finalPathNodes.remove(finalPathNodes.size()-1);
+        //
+
+
         return firstXinfinalPathNodes;
     }
 

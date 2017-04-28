@@ -23,6 +23,7 @@ public class BFS  {
     ArrayList<NodeObject> VisitedNodesList;
     //path for ghost to follow
     ArrayList<NodeObject> finalPathNodes;
+    private NodeObject updatedRootNodeBFS;
 
 
     public BFS(Setup setup, NodeObject[][] nodeObject){
@@ -31,45 +32,53 @@ public class BFS  {
         this.setup = setup;
 
 
-
+        VisitedNodesList =new ArrayList<NodeObject>();
+        queueWillOrHaveBeenVisited = new LinkedList<NodeObject>();
     }
-
-
 
 
     public void start(NodeObject startRootNode, NodeObject pacmanNode) {
 
+        queueWillOrHaveBeenVisited.clear();
 
         // queue each link is getting removed each time there is
-        queueWillOrHaveBeenVisited = new LinkedList<NodeObject>();
-        VisitedNodesList =new ArrayList<NodeObject>();
 
-
+        // update the root node.
 
         NodeObject rootNode = startRootNode;
+
+
+
+
+
+
         queueWillOrHaveBeenVisited.add(rootNode);
 
         NodeObject firstElement = queueWillOrHaveBeenVisited.getFirst();
         System.out.println("firstElement "+ firstElement);
 
-        // marke root node as visited
+        // mark root node as visited
+
+
+
         rootNode.visited = true;
+
 
         VisitedNodesList.add(rootNode);
         // while the queue is not empty go through it and
 
-        // good explanation //
 
         // in this while loop. while queue is not empty. still nodes to explore and see if they have children.
             //
 
         // make the root node the current Viewer CenterNode, the centernode is the one that explores the next nodes around it. looks
 
-         currentCenterViewerNode = rootNode;
+         currentCenterViewerNode = startRootNode;
 
         // take the first rootnode and and make its camefrom = null ?
 
         // find the first children and add them to the queue. after that you start finding the rest and take them of one by one as you go through.
+
 
 
 
@@ -103,21 +112,12 @@ public class BFS  {
 
             i++;
 
-
-
-
         }
-
-
-
 
         // clear visited
         clearNodes();
 
         // make path from the pink host to pacman
-
-
-
         makePath();
 
 
@@ -143,11 +143,11 @@ public class BFS  {
         // get previus node
         NodeObject previusNode = (NodeObject) currentCenterViewerNode.getcameFromBFS();
 
-        previusNode.setRectColor(Color.BROWN);
+        //previusNode.setRectColor(Color.BROWN);
 
 
 
-        System.out.println("BFS previusNode (x,y)  "+previusNode.getUniqueXval()+","+previusNode.getUniqueYval());
+        //System.out.println("BFS previusNode (x,y)  "+previusNode.getUniqueXval()+","+previusNode.getUniqueYval());
 
 
 
@@ -165,7 +165,7 @@ public class BFS  {
         for (int i = 0; i < VisitedNodesList.size(); i++) {
             // make them all visited = false
             VisitedNodesList.get(i).visited = false;
-
+            //VisitedNodesList.clear();
         }
 
     }
@@ -253,8 +253,18 @@ public class BFS  {
         // get last nodeObject in the list.
 
         // finalPathNodes.size()-1 because the first index number is 0.
+        if(!finalPathNodes.isEmpty()){
+            System.out.println("is not empty");
         NodeObject lastinfinalPathNodes= finalPathNodes.get(finalPathNodes.size()-1);
         finalPathNodes.remove(finalPathNodes.size()-1);
         return lastinfinalPathNodes;
+        }
+        NodeObject empty = null;
+        return empty;
+    }
+
+
+    public void setupdatedRootNodeBFS(NodeObject updatedRootNodeBFS) {
+        this.updatedRootNodeBFS = updatedRootNodeBFS;
     }
 }
