@@ -143,7 +143,7 @@ public class BFS  {
         // make path from the pink host to pacman
         makeNewPath();
 
-        pinkwalks();
+        //pinkwalks();
 
 
     }

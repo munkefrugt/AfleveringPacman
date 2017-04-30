@@ -168,7 +168,7 @@ public class A_star {
 
             // add only the starting node to the closed list in the beginning.
             // get the new node onto the closed list.
-            showContentOfLists();
+            //showContentOfLists();
             closedList.add(currentCenterNode);
 
 

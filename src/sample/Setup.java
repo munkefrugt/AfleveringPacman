@@ -58,6 +58,7 @@ public class Setup  {
     private boolean foundPacman = false;
     private NodeObject redGostNode;
     private boolean pinkIsMade = false;
+    int delayPinkOneRound=0;
 
 
     public Setup(Scene scene, Group root, NodeObject[][] nodeObject, int blockSize, int boxesX, int boxesY) {
@@ -778,7 +779,7 @@ public class Setup  {
                         //updatedghost
                         // delete the old information in astar first.
                         // the activate the astar.
-                        a_star.showContentOfLists();
+                        //a_star.showContentOfLists();
                         a_star.clearContentOfLists();
 
                         // reset all nodes, set all nodes isOnClosedList = false
@@ -786,7 +787,7 @@ public class Setup  {
 
 
                         a_star.startNewAstar(); // TODO change back
-                    a_star = new A_star(setup,redgostPosXUpdate,redgostPosYUpdate,redGhostPosX,redGhostPosY,pacmanPosX,pacmanPosY,root,nodeObject,blockSize, boxesX,boxesY);
+                        a_star = new A_star(setup,redgostPosXUpdate,redgostPosYUpdate,redGhostPosX,redGhostPosY,pacmanPosX,pacmanPosY,root,nodeObject,blockSize, boxesX,boxesY);
                         directionChanged = false;
 
                         System.out.println("pinkXY"+pinkGhostStartXPos+","+pinkGhostStartYPos);
@@ -980,16 +981,22 @@ public class Setup  {
 
     private void t1ThreadMethodLoop() {
 
-        int i = 0;
-        // while direction not changed
+
+
+        // while direction not changed and pacman not found.
         while(!directionChanged && !foundPacman)
         {
             //Run pink and red ghost.
-            if(pinkIsMade){
-            bfs.pinkwalks();
-                System.out.println("pinkwalks");
+            System.out.println("start pink and red");
+            System.out.println("delayPinkOneRound = "+delayPinkOneRound);
+            if(delayPinkOneRound >=1){
+                System.out.println("pink start");
+                if(pinkIsMade){
+                bfs.pinkwalks();
+                    System.out.println("pinkwalks");
+                }
             }
-
+            delayPinkOneRound++;
             System.out.println("red moves");
         int pathLenght = a_star.getArrayFinalPathNodes().size();
 
@@ -1041,7 +1048,7 @@ public class Setup  {
             }
 
 
-            i ++;
+
 
         }
 
