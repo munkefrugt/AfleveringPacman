@@ -194,6 +194,8 @@ public class NodeObject {
 
     public void resetNode() {
         isOnClosedList = false;
+        visited = false;
+        cameFromBFS = null;
     }
 
     public void setFood() {

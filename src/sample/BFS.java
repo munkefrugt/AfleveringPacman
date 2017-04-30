@@ -22,33 +22,35 @@ public class BFS  {
     NodeObject pacmanNode;
     ArrayList<NodeObject> VisitedNodesList;
     //path for ghost to follow
-    ArrayList<NodeObject> finalPathNodes;
+    LinkedList<NodeObject> finalPathNodes;
     private NodeObject updatedRootNodeBFS;
     private boolean colorOnBFS = false;
+    NodeObject newRootNode;
 
 
     public BFS(Setup setup, NodeObject[][] nodeObject){
 
+
         this.nodeObject = nodeObject;
         this.setup = setup;
-
-
+        boolean pinkIsMade=true;
+        setup.setpinkIsMade();
         VisitedNodesList =new ArrayList<NodeObject>();
         queueWillOrHaveBeenVisited = new LinkedList<NodeObject>();
-        finalPathNodes = new ArrayList<NodeObject>();
+        finalPathNodes = new LinkedList<NodeObject>();
     }
 
 
     public void start(NodeObject startRootNode, NodeObject pacmanNode, NodeObject BFSupdatedRootNode) {
 
-        System.out.println("start BFS");
+        //System.out.println("start BFS");
         this.pacmanNode = pacmanNode;
 
 
 
 
 
-        System.out.println("Log pacman is BFS"+pacmanNode.getUniqueXval()+","+pacmanNode.getUniqueYval());
+        //System.out.println("Log pacman is BFS"+pacmanNode.getUniqueXval()+","+pacmanNode.getUniqueYval());
         queueWillOrHaveBeenVisited.clear();
 
         // queue each link is getting removed each time there is
@@ -56,20 +58,19 @@ public class BFS  {
         // update the root node.
 
         NodeObject rootNode = startRootNode;
-        if(BFSupdatedRootNode != null){
-            System.out.println("BFSupdatedRootNode inside  BFS"+BFSupdatedRootNode.getUniqueXval()+","+BFSupdatedRootNode.getUniqueYval());
+        if(updatedRootNodeBFS != null){
+            //System.out.println("updatedRootNodeBFS inside  BFS"+BFSupdatedRootNode.getUniqueXval()+","+BFSupdatedRootNode.getUniqueYval());
+
+            rootNode = updatedRootNodeBFS;
 
             //rootNode = BFSupdatedRootNode; // TODO change this back see the error !!!!!!!!!!!   NEXT Step- fuck
         }
 
+        //rootNode= newRootNode;
 
-
-
-
+        // add something to the queue so its not empty
         queueWillOrHaveBeenVisited.add(rootNode);
 
-        NodeObject firstElement = queueWillOrHaveBeenVisited.getFirst();
-        System.out.println("firstElement "+ firstElement);
 
         // mark root node as visited
 
@@ -96,14 +97,21 @@ public class BFS  {
 
 
 
-       // while(!queueWillOrHaveBeenVisited.isEmpty()) { // TODO change it back.
         int i = 0;
         while(!queueWillOrHaveBeenVisited.isEmpty()) {
 
 
+
+
+            // when the BFS finds the pacman node, next step is to walk there.
             if(currentCenterViewerNode == pacmanNode){
-                System.out.println("pink found found pacman, BFS");
+                System.out.println("BFS algorithm found found pacman,next build the path.");
+                System.out.println("pacman x,y="+pacmanNode.getUniqueXval()+","+pacmanNode.getUniqueYval());
+                System.out.println("currentCenterViewerNode"+currentCenterViewerNode.getUniqueXval()+","+currentCenterViewerNode.getUniqueYval());
+
+                //queueWillOrHaveBeenVisited.clear();
                 // now break out. of while loop
+
                 break;
             }
 
@@ -119,7 +127,7 @@ public class BFS  {
 
             //currentCenterViewerNode.setRectColor(Color.YELLOW);
 
-            System.out.println("searching childnodes");
+            //System.out.println("searching childnodes");
             findChildrenOfNode();
 
             //
@@ -130,21 +138,45 @@ public class BFS  {
 
         // clear visited
         clearNodes();
+        // visited = false, happens in setup.resetNodesForNextMove
 
         // make path from the pink host to pacman
-        makePath();
+        makeNewPath();
+
+        pinkwalks();
+
+
+    }
+
+    public void pinkwalks() {
+
+        // if direction has changed
+
+        //while(!finalPathNodes.isEmpty() )
+        //{
+
+
+            int currentX = finalPathNodes.getLast().getUniqueXval();
+            int currentY = finalPathNodes.getLast().getUniqueYval();
+
+            // make the new root for the next path.
+            NodeObject newRootBFS =nodeObject[currentX][currentY];
+            setUpdatedRootNodeBFS(newRootBFS);
+
+            setup.pinkGostRectangle.relocate(currentX*setup.blockSize,currentY*setup.blockSize);
+            if(!finalPathNodes.isEmpty()){
+                System.out.println("pinkstep "+currentX+","+currentY);
+            System.out.println("finalPathNodes not empty yet***");
+            finalPathNodes.removeLast();
+            }
 
 
     }
 
 
+    private void makeNewPath() {
 
-    private void makePath() {
 
-        // start remove last list.
-        if(finalPathNodes != null ) {
-            finalPathNodes.clear();
-        }
 
 
         // follow back from the pacman node to get to the ghost node.
@@ -161,16 +193,14 @@ public class BFS  {
         // get previus node
         NodeObject previusNode = (NodeObject) currentCenterViewerNode.getcameFromBFS();
 
-        //previusNode.setRectColor(Color.BROWN);
 
-
-
-        //System.out.println("BFS previusNode (x,y)  "+previusNode.getUniqueXval()+","+previusNode.getUniqueYval());
+        System.out.println("BFS previusNode (x,y)  "+previusNode.getUniqueXval()+","+previusNode.getUniqueYval());
 
 
 
         // change the previus node to currentcenterNode
         currentCenterViewerNode =  previusNode;
+
 
 
         }
@@ -179,12 +209,12 @@ public class BFS  {
     }
 
     public void clearNodes() {
-        // clear each visited node.
-        for (int i = 0; i < VisitedNodesList.size(); i++) {
-            // make them all visited = false
-            VisitedNodesList.get(i).visited = false;
-            //VisitedNodesList.clear();
-        }
+            // clear each visited node.
+            for (int i = 0; i < VisitedNodesList.size(); i++) {
+                // make them all visited = false
+                VisitedNodesList.get(i).visited = false;
+            }
+            VisitedNodesList.clear();
 
     }
 
@@ -209,7 +239,7 @@ public class BFS  {
 
             //up
             if (!nodeObject[x][y-1].isWall && !nodeObject[x][y-1].visited ){
-                System.out.println("BFS up not wall not visited"+ x+","+ (y-1));
+                //System.out.println("BFS up not wall not visited"+ x+","+ (y-1));
                 // if not visited && not wall.  make it child
                 // now ad it to queueWillOrHaveBeenVisited
                 queueWillOrHaveBeenVisited.add(nodeObject[x][y-1]);
@@ -220,7 +250,9 @@ public class BFS  {
             }
             // down
             if (!nodeObject[x][y+1].isWall && !nodeObject[x][y+1].visited){
-                    System.out.println("BFS down not wall"+ x+","+ (y-1));
+
+                    //System.out.println("BFS down not wall"+ x+","+ (y-1));
+
                 // if not visited && not wall.  make it child
                     // now add it to queueWillOrHaveBeenVisited
                     queueWillOrHaveBeenVisited.add(nodeObject[x][y+1]);
@@ -232,7 +264,7 @@ public class BFS  {
 
             // left
             if (!nodeObject[x-1][y].isWall&& !nodeObject[x-1][y].visited){
-                System.out.println("BFS left not wall"+ (x-1)+","+ y);
+               // System.out.println("BFS left not wall"+ (x-1)+","+ y);
                 // if not visited && not wall.  make it child
                 // now add it to queueWillOrHaveBeenVisited
                 queueWillOrHaveBeenVisited.add(nodeObject[x-1][y]);
@@ -244,7 +276,7 @@ public class BFS  {
 
             //right
             if (!nodeObject[x+1][y].isWall&& !nodeObject[x+1][y].visited){
-                System.out.println("BFS right not wall"+ (x+1)+","+ y);
+             //   System.out.println("BFS right not wall"+ (x+1)+","+ y);
 
                 // if not visited && not wall.  make it child
                 // now add it to queueWillOrHaveBeenVisited
@@ -254,7 +286,7 @@ public class BFS  {
 
 
             }
-            else System.out.println("BFS, no more children to add for this Node");
+            //else System.out.println("BFS, no more children to add for this Node");
 
 
 
@@ -262,7 +294,7 @@ public class BFS  {
 
     }
 
-    public ArrayList<NodeObject> getFinalPathNodes() {
+    public LinkedList<NodeObject> getFinalPathNodes() {
 
         return finalPathNodes;
     }
@@ -272,7 +304,7 @@ public class BFS  {
 
         // finalPathNodes.size()-1 because the first index number is 0.
         if(!finalPathNodes.isEmpty()){
-            System.out.println("is not empty");
+            // System.out.println("is not empty");
         NodeObject lastinfinalPathNodes= finalPathNodes.get(finalPathNodes.size()-1);
         finalPathNodes.remove(finalPathNodes.size()-1);
         return lastinfinalPathNodes;
@@ -282,7 +314,7 @@ public class BFS  {
     }
 
 
-    public void setupdatedRootNodeBFS(NodeObject updatedRootNodeBFS) {
+    public void setUpdatedRootNodeBFS(NodeObject updatedRootNodeBFS) {
         this.updatedRootNodeBFS = updatedRootNodeBFS;
     }
 }

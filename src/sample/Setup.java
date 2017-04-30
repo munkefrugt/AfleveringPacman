@@ -57,6 +57,7 @@ public class Setup  {
     private NodeObject BFSupdatedRootNode;
     private boolean foundPacman = false;
     private NodeObject redGostNode;
+    private boolean pinkIsMade = false;
 
 
     public Setup(Scene scene, Group root, NodeObject[][] nodeObject, int blockSize, int boxesX, int boxesY) {
@@ -106,7 +107,7 @@ public class Setup  {
 
 
         // prints the nodes
-        for(int y = 0; y < boxesY; y++) {
+        /*for(int y = 0; y < boxesY; y++) {
 
             for(int x = 0; x < boxesX; x++) {
 
@@ -114,7 +115,7 @@ public class Setup  {
                 System.out.println("print nodeObject["+x+y+"] return unique x and y value for obj=  "+
                         nodeObject[x][y].getUniqueXval()+ " ," + nodeObject[x][y].getUniqueYval());
             }
-        }
+        }*/
         // make walls
         makewalls();
         makeFood();
@@ -122,6 +123,8 @@ public class Setup  {
     }
 
     private void makeFood() {
+        System.out.println("make food");
+
         for(int y = 0; y < boxesY; y++) {
 
             // make an array of squares.
@@ -131,7 +134,7 @@ public class Setup  {
                         // if node is not wall
                         if(!nodeObject[x][y].getisWall())
                         {
-                            System.out.println("make food");
+                            //System.out.println("make food");
 
                             nodeObject[x][y].setFood();
 
@@ -634,7 +637,7 @@ public class Setup  {
                             pacmanPosY = yCheck;
                             upDatePacman();
 
-                            System.out.println("no wall for pacman");
+                            //System.out.println("no wall for pacman");
                         }
                         else{
                             System.out.println("pacman cant walk here");
@@ -782,8 +785,8 @@ public class Setup  {
                         resetNodesForNextMove();
 
 
-                        a_star.startNewAstar();
-                        a_star = new A_star(setup,redgostPosXUpdate,redgostPosYUpdate,redGhostPosX,redGhostPosY,pacmanPosX,pacmanPosY,root,nodeObject,blockSize, boxesX,boxesY);
+                        a_star.startNewAstar(); // TODO change back
+                    a_star = new A_star(setup,redgostPosXUpdate,redgostPosYUpdate,redGhostPosX,redGhostPosY,pacmanPosX,pacmanPosY,root,nodeObject,blockSize, boxesX,boxesY);
                         directionChanged = false;
 
                         System.out.println("pinkXY"+pinkGhostStartXPos+","+pinkGhostStartYPos);
@@ -801,10 +804,8 @@ public class Setup  {
                     System.out.println("no thread t1");
                     // make the first a_star algorithm.
                     a_star = new A_star(setup, redgostPosXUpdate, redgostPosYUpdate, redGhostPosX,redGhostPosY,pacmanPosX,pacmanPosY,root,nodeObject,blockSize, boxesX,boxesY);
-                    maketheRedghostMoveAlongAStarAndStartNewThread();
+                    maketheRedghostMoveAlongAStarAndStartNewThread(); // TODO change back
 
-                    //BreathFirst breathFirst new BreathFirst();
-                    //startNew_breathfirst();
 
                     // make BFS
                      bfs = new BFS(setup,nodeObject);
@@ -813,7 +814,7 @@ public class Setup  {
                     BFSrootNode = nodeObject[pinkGhostStartXPos][pinkGhostStartYPos];
 
                     bfs.start(BFSrootNode,pacmanNode, BFSupdatedRootNode);
-                    PinkghostMoveAlongBFSAndStartNewThread();
+                    //PinkghostMoveAlongBFSAndStartNewThread();
 
 
                 }
@@ -851,7 +852,7 @@ public class Setup  {
 
                         while(!directionChanged && !foundPacman)
                         {
-                            int pathLenght = bfs.getFinalPathNodes().size();
+                            //int pathLenght = bfs.getFinalPathNodes().size();
 
                             //System.out.println("each gost moves");
 
@@ -864,7 +865,7 @@ public class Setup  {
 
                             NodeObject LastNodeInFinalpathArray;
                             // if array array is empty. is empty ; true if length is 0 otherwise false.
-                            if(a_star.finalPathNodes.isEmpty()){
+                            if(bfs.finalPathNodes.isEmpty()){
                                 System.out.println("pink ate you , array is empty game over");
                                 foundPacman = true;
                                 break;
@@ -882,17 +883,14 @@ public class Setup  {
                             //
 
                             BFSupdatedRootNode =nodeObject[updatedPinkGhostXPos][updatedPinkGhostYPos];
-                            //bfs.setupdatedRootNodeBFS(updatedRootNodeBFS);
+                            //bfs.setUpdatedRootNodeBFS(updatedRootNodeBFS);
                             pinkGostRectangle.relocate(updatedPinkGhostXPos*blockSize,updatedPinkGhostYPos*blockSize);
 
                             // delete the first value of the finalPathNodes.
                             try {
-                                //canInteruptNow = false;// TODO DELETE THIS?
                                 Thread.sleep(1000);                 //1000 milliseconds is one second.
 
                                 System.out.println("log, sleep inthread BFS");
-                                //set in some kind of thing that its okay to interupt.
-                                //canInteruptNow  = true; // TODO DELETE THIS?
 
                             } catch(InterruptedException ex) {
                                 Thread.currentThread().interrupt();
@@ -986,6 +984,13 @@ public class Setup  {
         // while direction not changed
         while(!directionChanged && !foundPacman)
         {
+            //Run pink and red ghost.
+            if(pinkIsMade){
+            bfs.pinkwalks();
+                System.out.println("pinkwalks");
+            }
+
+            System.out.println("red moves");
         int pathLenght = a_star.getArrayFinalPathNodes().size();
 
             //System.out.println("each gost moves");
@@ -1006,11 +1011,11 @@ public class Setup  {
             LastNodeInFinalpathArray = a_star.getlastNodeInFinalPathNodesAndRemove();
             redgostPosX= LastNodeInFinalpathArray.getUniqueXval();
             redgostPosY=LastNodeInFinalpathArray.getUniqueYval();
-            System.out.println("LastNodeInFinalpathArray.getUniqueXval()"+ LastNodeInFinalpathArray.getUniqueXval());
-            System.out.println("LastNodeInFinalpathArray.getUniqueYval()"+ LastNodeInFinalpathArray.getUniqueYval());
+            //System.out.println("LastNodeInFinalpathArray.getUniqueXval()"+ LastNodeInFinalpathArray.getUniqueXval());
+            //System.out.println("LastNodeInFinalpathArray.getUniqueYval()"+ LastNodeInFinalpathArray.getUniqueYval());
 
-            System.out.println("walking redgostPosX "+redgostPosX);
-            System.out.println("walking redgostPosY "+redgostPosY);
+            //System.out.println("walking redgostPosX "+redgostPosX);
+            //System.out.println("walking redgostPosY "+redgostPosY);
             // for some reason itdosent work outside thetime loop and the variables have to be redefined.
             int relocateValX= redgostPosX;
             int relocateValY= redgostPosY;
@@ -1027,7 +1032,7 @@ public class Setup  {
                 canInteruptNow = false;// TODO DELETE THIS?
                 Thread.sleep(1000);                 //1000 milliseconds is one second.
 
-                System.out.println("log, sleep inthread t1");
+                //System.out.println("log, sleep inthread t1");
                 //set in some kind of thing that its okay to interupt.
                 canInteruptNow  = true; // TODO DELETE THIS?
 
@@ -1048,5 +1053,11 @@ public class Setup  {
     }
 
 
+    public boolean getdirectionChanged() {
+        return directionChanged;
+    }
 
+    public void setpinkIsMade() {
+        pinkIsMade = true;
+    }
 }
