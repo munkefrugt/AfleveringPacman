@@ -38,6 +38,11 @@ public class NodeObject {
     // make true when visited used in BFS
     public boolean visited = false;
     NodeObject cameFromBFS;
+    public boolean biBFSvisitedA;
+    NodeObject A_cameFromBiBFS;
+    NodeObject B_cameFromBiBFS;
+    public boolean biBFSvisitedB=false;
+
 
 
     public NodeObject(int x, int y, Group root, int blockSize) {
@@ -210,5 +215,23 @@ public class NodeObject {
 
     public NodeObject getcameFromBFS() {
         return cameFromBFS;
+    }
+
+    public void setACameFromBiBFS(NodeObject cameFromBiBFS) {
+        this.A_cameFromBiBFS = cameFromBiBFS;
+    }
+
+    public void setB_cameFromBiBFS(NodeObject b_cameFromBiBFS) {
+        this.B_cameFromBiBFS = b_cameFromBiBFS;
+    }
+
+
+
+    public NodeObject getA_cameFromBiBFS() {
+        return A_cameFromBiBFS;
+    }
+
+    public NodeObject getB_cameFromBiBFS() {
+        return B_cameFromBiBFS;
     }
 }

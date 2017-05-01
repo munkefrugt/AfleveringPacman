@@ -59,6 +59,9 @@ public class Setup  {
     private NodeObject redGostNode;
     private boolean pinkIsMade = false;
     int delayPinkOneRound=0;
+    private BiBFS bibfs;
+    NodeObject biBFSupdatedRootNode;
+    private NodeObject biBFSrootNode;
 
 
     public Setup(Scene scene, Group root, NodeObject[][] nodeObject, int blockSize, int boxesX, int boxesY) {
@@ -817,6 +820,10 @@ public class Setup  {
                     bfs.start(BFSrootNode,pacmanNode, BFSupdatedRootNode);
                     //PinkghostMoveAlongBFSAndStartNewThread();
 
+                    // make bi-bfs
+                    bibfs = new BiBFS(setup,nodeObject);
+
+                    bibfs.start(pacmanNode, biBFSupdatedRootNode);
 
                 }
 
@@ -996,6 +1003,7 @@ public class Setup  {
                     System.out.println("pinkwalks");
                 }
             }
+
             delayPinkOneRound++;
             System.out.println("red moves");
         int pathLenght = a_star.getArrayFinalPathNodes().size();
