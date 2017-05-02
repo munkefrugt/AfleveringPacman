@@ -15,6 +15,8 @@ public class BiBFS {
     NodeObject rootNode;
     LinkedList<NodeObject> qA;
     LinkedList<NodeObject> qB;
+    LinkedList<NodeObject> finalPath;
+
     Setup setup;
     NodeObject[][] nodeObject;
     ArrayList<NodeObject> VisitedNodesList;
@@ -23,8 +25,9 @@ public class BiBFS {
     private ArrayList visitedlistB;
     private ArrayList visitedlistA;
     private boolean ArrayesHaveCommenNode=false;
-    private boolean readyToMakepath;
+
     private boolean colorOnBFS = true;
+    NodeObject updatedRoot;
     // bidirectional Breath first search
 
     // inpired by. http://stackoverflow.com/questions/38674659/bidirectional-search-implementation-for-graph
@@ -42,6 +45,7 @@ public class BiBFS {
 
         AToCommenNodepath = new  LinkedList<NodeObject>();
         BToCommenNodepath = new  LinkedList<NodeObject>();
+        finalPath = new  LinkedList<NodeObject>();
 
 
         visitedlistA = new ArrayList<NodeObject>();
@@ -57,22 +61,28 @@ public class BiBFS {
 
     public void start(NodeObject pacman, NodeObject updatedRoot) {
 
+        System.out.println("blue start up");
+        this.pacmanNode = pacman;
+        this.updatedRoot = updatedRoot;
+
 
         NodeObject AcurrentCenterViewerNode = rootNode;
         NodeObject BcurrentCenterViewerNode = pacman;
 
+        // reset lists.
+        resetListAndVariables();
 
-        qA.clear();
-        qB.clear();
-        visitedlistA.clear();
-        visitedlistB.clear();
+
+
 
         if(updatedRoot != null){
-            System.out.println("updatedRootNodeBFS inside  BFS"+updatedRoot.getUniqueXval()+","+updatedRoot.getUniqueYval());
+            System.out.println("updatedRootNode biBFS inside  bi BFS"+updatedRoot.getUniqueXval()+","+updatedRoot.getUniqueYval());
 
             rootNode = updatedRoot;
 
         }
+        else{System.out.println("updatedRootNode biBFS " + updatedRoot); }
+
 
         //rootNode= newRootNode;
 
@@ -96,6 +106,7 @@ public class BiBFS {
 
 
 
+            System.out.println("start making the bi BFS");
         while(!qA.isEmpty() && !qB.isEmpty()){
 
 
@@ -171,7 +182,7 @@ public class BiBFS {
 
             // return true if in bothlist.
 
-            System.out.println(" commom elements: "+ArrayesHaveCommenNode);
+            System.out.println(" commom elements: "+ArrayesHaveCommenNode); // TODO !!!! false!! second run.
 
             // visitedlistA now contains only the elements which are also contained in visitedlistB.
 
@@ -184,8 +195,36 @@ public class BiBFS {
 
     }
 
+    private void resetListAndVariables() {
+        qA.clear();
+        qB.clear();
+
+        for (int i = 0; i <visitedlistA.size() ; i++) {
+            NodeObject node = (NodeObject) visitedlistA.get(i);
+            node.visited=false;
+        }
+        visitedlistA.clear();
+
+        for (int i = 0; i <visitedlistB.size() ; i++) {
+            NodeObject node = (NodeObject) visitedlistB.get(i);
+            node.visited=false;
+        }
+
+        visitedlistB.clear();
+        finalPath.clear();
+
+        rootNode.visited = false;
+        pacmanNode.visited = false;
+        ArrayesHaveCommenNode = false;
+
+        // reset "camefrom=null" happpens in setup.resetNodesForNextMove();
+
+
+    }
+
     private void makepath(NodeObject meetInNode) {
 
+        System.out.println("make path for blue ghost. ");
         // make to list and put them toghter:
             // we know where the nodes camefrom make 2 camefrom list.
 
@@ -195,10 +234,15 @@ public class BiBFS {
 
         // first just add them all from A-middle
         NodeObject A_pathnode = meetInNode;
-
+        System.out.println("A_pathnode" +A_pathnode);
 
         while(A_pathnode.getA_cameFromBiBFS() != null){
-            AToCommenNodepath.add(A_pathnode);
+
+            // add to final path
+
+            finalPath.addFirst(A_pathnode);
+
+            //AToCommenNodepath.add(A_pathnode);
 
             if(colorOnBFS){
 
@@ -208,7 +252,7 @@ public class BiBFS {
             // get previus node
             NodeObject previusNode = (NodeObject) A_pathnode.getcameFromBFS();
 
-
+            System.out.println("previusNode ="+previusNode);
             System.out.println("A bi-BFS previusNode (x,y)  "+previusNode.getUniqueXval()+","+previusNode.getUniqueYval());
 
 
@@ -216,20 +260,27 @@ public class BiBFS {
             // change the previus node to currentcenterNode
             A_pathnode =  previusNode;
 
+
         }
 
         // first just add them all from B-middle
         NodeObject B_pathnode = meetInNode;
+        int k=0;
         while(B_pathnode.getB_cameFromBiBFS() != null){
-            AToCommenNodepath.add(A_pathnode);
+
+            if(k >=1){
+
+            finalPath.add(B_pathnode);
+            }
+            k++;
 
             if(colorOnBFS){
 
-                B_pathnode.setRectColor(Color.BLUE);
+                B_pathnode.setRectColor(Color.BLUEVIOLET);
             }
 
             // get previus node
-            NodeObject previusNode = (NodeObject) B_pathnode.getcameFromBFS();
+            NodeObject previusNode = (NodeObject) B_pathnode.getB_cameFromBiBFS();
 
 
             System.out.println("B bi-BFS previusNode (x,y)  "+previusNode.getUniqueXval()+","+previusNode.getUniqueYval());
@@ -239,7 +290,24 @@ public class BiBFS {
             // change the previus node to currentcenterNode
             B_pathnode =  previusNode;
 
+
         }
+
+        // now make it into one list. "final pathnodes".
+
+        // updatedRoot will be null the first round.
+        if (updatedRoot != null){
+
+        rootNode= updatedRoot;
+        }
+        finalPath.addFirst(rootNode);
+        // add the pacman node
+        finalPath.addLast(pacmanNode);
+
+        for (int i = 0; i < finalPath.size() ; i++) {
+            System.out.println("finalPath,i,x,y  "+i+"   "+ finalPath.get(i).getUniqueXval()+","+ finalPath.get(i).getUniqueYval());
+        }
+        System.out.println("pacmanNode"+pacmanNode.getUniqueXval()+","+pacmanNode.getUniqueYval());
 
 
 
@@ -418,5 +486,29 @@ public class BiBFS {
 
 
 
+    }
+
+    public void bluewalks() {
+
+        if(!finalPath.isEmpty()){
+        int currentX = finalPath.getFirst().getUniqueXval();
+        int currentY = finalPath.getFirst().getUniqueYval();
+
+        // make the new root for the next path.
+        //NodeObject newRootBFS =
+
+        //updatedRoot =newRootBFS;
+
+           NodeObject newRootBFS=nodeObject[currentX][currentY];
+        setup.setbiBFSupdatedRootNode(newRootBFS);
+
+        setup.blueGostRectangle.relocate(currentX*setup.blockSize,currentY*setup.blockSize);
+            System.out.println("bluestep "+currentX+","+currentY);
+            System.out.println("finalPathNodes not empty yet***");
+            finalPath.removeFirst();
+        }
+        else{
+            System.out.println("finalPathNodes empty bi-BFS");
+        }
     }
 }

@@ -201,6 +201,10 @@ public class NodeObject {
         isOnClosedList = false;
         visited = false;
         cameFromBFS = null;
+        A_cameFromBiBFS= null;
+        B_cameFromBiBFS= null;
+        biBFSvisitedA = false;
+        biBFSvisitedB = false;
     }
 
     public void setFood() {

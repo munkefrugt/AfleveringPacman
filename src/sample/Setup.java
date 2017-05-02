@@ -3,6 +3,7 @@ package sample;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
@@ -58,10 +59,12 @@ public class Setup  {
     private boolean foundPacman = false;
     private NodeObject redGostNode;
     private boolean pinkIsMade = false;
-    int delayPinkOneRound=0;
+    int delay =0;
     private BiBFS bibfs;
     NodeObject biBFSupdatedRootNode;
     private NodeObject biBFSrootNode;
+     boolean blueIsMade;
+    public Rectangle blueGostRectangle;
 
 
     public Setup(Scene scene, Group root, NodeObject[][] nodeObject, int blockSize, int boxesX, int boxesY) {
@@ -594,14 +597,14 @@ public class Setup  {
         pinkGostRectangle = new Rectangle(0,0,blockSize,blockSize);
         pinkGostRectangle.setFill(Color.PINK);
 
-        blueRect = new Rectangle(blockSize,blockSize);
-        blueRect.setFill(Color.BLUE);
+        blueGostRectangle = new Rectangle(0,0,blockSize,blockSize);
+        blueGostRectangle.setFill(Color.BLUE);
         orangeRect = new Rectangle(blockSize,blockSize);
         orangeRect.setFill(Color.ORANGE);
 
 
 
-        root.getChildren().addAll(blueRect,pinkGostRectangle, redGostRectangle,orangeRect);
+        root.getChildren().addAll(blueGostRectangle,pinkGostRectangle, redGostRectangle,orangeRect);
 
 
 
@@ -795,6 +798,8 @@ public class Setup  {
 
                         System.out.println("pinkXY"+pinkGhostStartXPos+","+pinkGhostStartYPos);
                         bfs.start(BFSrootNode,pacmanNode,BFSupdatedRootNode);
+
+                        bibfs.start(pacmanNode, biBFSupdatedRootNode);
 
 
 
@@ -995,16 +1000,27 @@ public class Setup  {
         {
             //Run pink and red ghost.
             System.out.println("start pink and red");
-            System.out.println("delayPinkOneRound = "+delayPinkOneRound);
-            if(delayPinkOneRound >=1){
+            System.out.println("delay = "+ delay);
+            // wait 1 round before it starts
+            //pink
+            if(delay >=1){
                 System.out.println("pink start");
                 if(pinkIsMade){
                 bfs.pinkwalks();
                     System.out.println("pinkwalks");
                 }
             }
+            // blue
+            if(delay >=2){
+                System.out.println("blue start");
+                //if(blueIsMade){
+                    System.out.println("bluewalks");
+                    bibfs.bluewalks();
+               // }
 
-            delayPinkOneRound++;
+            }
+
+            delay++;
             System.out.println("red moves");
         int pathLenght = a_star.getArrayFinalPathNodes().size();
 
@@ -1074,5 +1090,9 @@ public class Setup  {
 
     public void setpinkIsMade() {
         pinkIsMade = true;
+    }
+
+    public void setbiBFSupdatedRootNode(NodeObject biBFSupdatedRootNode) {
+        this.biBFSupdatedRootNode = biBFSupdatedRootNode;
     }
 }
