@@ -3,7 +3,6 @@ package sample;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
@@ -87,7 +86,7 @@ public class Setup  {
         orangeGost = new Gost();
 
         // method needs activation
-        //maketheRedghostMoveAlongAStarAndStartNewThread();
+        //ghostsMovesAndNewThread();
     }
     // make nodes,and rectangles
     public void startUpBoard() {
@@ -618,7 +617,7 @@ public class Setup  {
     public void startMover() {
 
         //a_star = new A_star(redGhostPosX,redGhostPosY,pacmanPosX,pacmanPosY,root,nodeObject,blockSize, boxesX,boxesY);
-        //maketheRedghostMoveAlongAStarAndStartNewThread();
+        //ghostsMovesAndNewThread();
 
         scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
 
@@ -750,7 +749,7 @@ public class Setup  {
         nodeObject[pacmanPosX][pacmanPosY].makeitNotPacman();
 
         startSearchMethods();
-        //maketheRedghostMoveAlongAStarAndStartNewThread();
+        //ghostsMovesAndNewThread();
 
         // make pacman yellow
         pacmanNode.setRectColor(Color.YELLOW);
@@ -792,7 +791,7 @@ public class Setup  {
                         resetNodesForNextMove();
 
 
-                        a_star.startNewAstar(); // TODO change back
+                        a_star.startNewAstar();
                         a_star = new A_star(setup,redgostPosXUpdate,redgostPosYUpdate,redGhostPosX,redGhostPosY,pacmanPosX,pacmanPosY,root,nodeObject,blockSize, boxesX,boxesY);
                         directionChanged = false;
 
@@ -813,7 +812,7 @@ public class Setup  {
                     System.out.println("no thread t1");
                     // make the first a_star algorithm.
                     a_star = new A_star(setup, redgostPosXUpdate, redgostPosYUpdate, redGhostPosX,redGhostPosY,pacmanPosX,pacmanPosY,root,nodeObject,blockSize, boxesX,boxesY);
-                    maketheRedghostMoveAlongAStarAndStartNewThread(); // TODO change back
+                    ghostsMovesAndNewThread(); // TODO change back
 
 
                     // make BFS
@@ -952,7 +951,7 @@ public class Setup  {
         }
     }
 
-    private void maketheRedghostMoveAlongAStarAndStartNewThread() {
+    private void ghostsMovesAndNewThread() {
 
 
 
@@ -1011,7 +1010,7 @@ public class Setup  {
                 }
             }
             // blue
-            if(delay >=2){
+            if(delay >=1){
                 System.out.println("blue start");
                 //if(blueIsMade){
                     System.out.println("bluewalks");

@@ -182,7 +182,7 @@ public class BiBFS {
 
             // return true if in bothlist.
 
-            System.out.println(" commom elements: "+ArrayesHaveCommenNode); // TODO !!!! false!! second run.
+            System.out.println(" commom elements: "+ArrayesHaveCommenNode);
 
             // visitedlistA now contains only the elements which are also contained in visitedlistB.
 
@@ -250,7 +250,9 @@ public class BiBFS {
             }
 
             // get previus node
-            NodeObject previusNode = (NodeObject) A_pathnode.getcameFromBFS();
+            if(A_pathnode == null) System.out.println("cast");
+
+            NodeObject previusNode = (NodeObject) A_pathnode.getA_cameFromBiBFS(); // TODO  !getcameFromBFS !! bi BFS not just BFS
 
             System.out.println("previusNode ="+previusNode);
             System.out.println("A bi-BFS previusNode (x,y)  "+previusNode.getUniqueXval()+","+previusNode.getUniqueYval());
@@ -300,7 +302,7 @@ public class BiBFS {
 
         rootNode= updatedRoot;
         }
-        finalPath.addFirst(rootNode);
+        //finalPath.addFirst(rootNode);
         // add the pacman node
         finalPath.addLast(pacmanNode);
 
