@@ -26,7 +26,7 @@ public class BiBFS {
     private ArrayList visitedlistA;
     private boolean ArrayesHaveCommenNode=false;
 
-    private boolean colorOnBFS = true;
+    private boolean colorOnBFS = false;
     NodeObject updatedRoot;
     // bidirectional Breath first search
 
@@ -164,11 +164,18 @@ public class BiBFS {
                 //http://stackoverflow.com/questions/5943330/common-elements-in-two-lists
             visitedlistA.retainAll(visitedlistB);
 
-                System.out.println("visitedlistA.size()  "+ visitedlistA.size());
-                NodeObject meetInNode = (NodeObject) visitedlistA.get(0);
+                System.out.println("visitedlistA.size()  "+ visitedlistA.size());   //  cant be more than 1.
+                NodeObject meetInNode = (NodeObject) visitedlistA.get(0); //  just take the first even if there is more dosent mattter
+
+                for (Object item : visitedlistA) {
+
+                    NodeObject node = (NodeObject) item;
+                    System.out.println("node " +node.getUniqueXval()+","+node.getUniqueYval());
+
+                }
 
 
-                if(visitedlistA.size()==1  ) {
+                if(visitedlistA.size() >1  ) { // can be more than one.
                     System.out.println("meetInNode " +meetInNode.getUniqueXval()+","+meetInNode.getUniqueYval());
                     makepath(meetInNode);
 
@@ -223,6 +230,8 @@ public class BiBFS {
     }
 
     private void makepath(NodeObject meetInNode) {
+        //reset blueIsMade:
+        setup.blueIsMade=false;
 
         System.out.println("make path for blue ghost. ");
         // make to list and put them toghter:
@@ -311,6 +320,16 @@ public class BiBFS {
         }
         System.out.println("pacmanNode"+pacmanNode.getUniqueXval()+","+pacmanNode.getUniqueYval());
 
+        if(!finalPath.isEmpty()){
+            System.out.println( " blue path not empty");
+            setup.blueIsMade=true;
+
+        }
+        else{
+            setup.blueIsMade=false;
+            System.out.println("blue path empty");
+
+        }
 
 
 
@@ -491,7 +510,8 @@ public class BiBFS {
     }
 
     public void bluewalks() {
-
+        System.out.println("bluewalks method");
+        System.out.println("finalPath"+finalPath);
         if(!finalPath.isEmpty()){
         int currentX = finalPath.getFirst().getUniqueXval();
         int currentY = finalPath.getFirst().getUniqueYval();
@@ -506,7 +526,7 @@ public class BiBFS {
 
         setup.blueGostRectangle.relocate(currentX*setup.blockSize,currentY*setup.blockSize);
             System.out.println("bluestep "+currentX+","+currentY);
-            System.out.println("finalPathNodes not empty yet***");
+            System.out.println("blue finalPathNodes not empty yet***");
             finalPath.removeFirst();
         }
         else{

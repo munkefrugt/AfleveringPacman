@@ -42,7 +42,10 @@ public class NodeObject {
     NodeObject A_cameFromBiBFS;
     NodeObject B_cameFromBiBFS;
     public boolean biBFSvisitedB=false;
-
+    private int bestFirstH;
+    NodeObject cameFromBestFirst;
+    int bestFirstG;
+    boolean onClosedListBestFirst=false;
 
 
     public NodeObject(int x, int y, Group root, int blockSize) {
@@ -136,6 +139,7 @@ public class NodeObject {
         this.cameFrom = currentCenterNode;
 
     }
+
     public void setCameFromBFS(NodeObject currentCenterNode) {
 
         this.cameFromBFS = currentCenterNode;
@@ -150,10 +154,17 @@ public class NodeObject {
     public void setH(int h) {
         this.h = h;
     }
+    public void setBestFirstH(int bestFirstH) {
+        this.bestFirstH = bestFirstH;
+    }
 
     public int getH() {
         System.out.println("inside NodeObject.class h = "+h);
         return h;
+    }
+    public int getBestFirstH() {
+        System.out.println("inside NodeObject.class h = "+bestFirstH);
+        return bestFirstH;
     }
 
     public void calculateG(int stepvalueG) {
@@ -167,6 +178,7 @@ public class NodeObject {
     public int getG() {
         return g;
     }
+
 
     public boolean isOnClosedList() {
 
@@ -201,6 +213,8 @@ public class NodeObject {
         isOnClosedList = false;
         visited = false;
         cameFromBFS = null;
+        onClosedListBestFirst = false;
+        cameFromBestFirst = null;
         A_cameFromBiBFS= null;
         B_cameFromBiBFS= null;
         biBFSvisitedA = false;
@@ -237,5 +251,32 @@ public class NodeObject {
 
     public NodeObject getB_cameFromBiBFS() {
         return B_cameFromBiBFS;
+    }
+
+    public void setCameFromBestFirst(NodeObject cameFromBestFirst) {
+        this.cameFromBestFirst = cameFromBestFirst;
+    }
+
+    public NodeObject getCameFromBestFirst() {
+        return cameFromBestFirst;
+    }
+
+    public void BestFirstCalculateG(int stepValueG) {
+        bestFirstG = cameFromBestFirst.getBestFirstG() + stepValueG;
+        System.out.println("cameFromBestFirst.getBestFirstG()"+ cameFromBestFirst.getBestFirstG());
+        System.out.println("bestFirstG = "+ bestFirstG +"**************************");
+
+    }
+
+    public int getBestFirstG() {
+        return bestFirstG;
+    }
+
+    public boolean isOnClosedListBestFirst() {
+        return onClosedListBestFirst;
+    }
+
+    public void takeOfOpenListBestFirst() {
+        onClosedListBestFirst = true;
     }
 }

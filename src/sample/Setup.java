@@ -64,6 +64,12 @@ public class Setup  {
     private NodeObject biBFSrootNode;
      boolean blueIsMade;
     public Rectangle blueGostRectangle;
+    int orangegostPosXUpdate;
+    int orangegostPosYUpdate;
+    int orangeGhostPosX;
+    int orangeGhostPosY;
+    boolean orangeIsMade;
+    BestFirstSearch bestFirstSearch;
 
 
     public Setup(Scene scene, Group root, NodeObject[][] nodeObject, int blockSize, int boxesX, int boxesY) {
@@ -829,6 +835,13 @@ public class Setup  {
 
                     bibfs.start(pacmanNode, biBFSupdatedRootNode);
 
+                    // start Orange
+                    orangegostPosXUpdate =13;
+                    orangegostPosYUpdate =7;
+                    bestFirstSearch = new BestFirstSearch(setup, orangegostPosXUpdate, orangegostPosYUpdate, orangeGhostPosX, orangeGhostPosY, pacmanPosX, pacmanPosY, root, nodeObject, blockSize, boxesX, boxesY);
+                    //bestFirstSearch.startNewAstar();
+
+
                 }
 
 
@@ -953,9 +966,6 @@ public class Setup  {
 
     private void ghostsMovesAndNewThread() {
 
-
-
-
                 // make a new thread  so we can pause that thread, thats the way we make the gost move one space per sec.
                  t1 = new Thread(new Runnable() {
 
@@ -966,8 +976,6 @@ public class Setup  {
                         System.out.println("start t1");
                         if(startThreadT1)
                         {
-
-
                             while(!foundPacman)
                             {
 
@@ -1010,14 +1018,25 @@ public class Setup  {
                 }
             }
             // blue
-            if(delay >=1){
+            if(delay >=2){
                 System.out.println("blue start");
-                //if(blueIsMade){
+                if(blueIsMade){
                     System.out.println("bluewalks");
                     bibfs.bluewalks();
-               // }
+
+                }
 
             }
+            if(delay >=3){
+                System.out.println("orange start");
+                if(orangeIsMade){
+                    System.out.println("orangewalks");
+                    bestFirstSearch.orangewalks();
+
+                }
+
+            }
+
 
             delay++;
             System.out.println("red moves");
