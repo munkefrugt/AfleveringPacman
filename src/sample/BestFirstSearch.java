@@ -293,7 +293,7 @@ public class BestFirstSearch {
                 if(showAstarpathWithColor)
                 {
 
-                    previusNode.setRectColor(Color.ORANGE);
+                    previusNode.setRectColor(Color.GRAY);
                 }
 
                 System.out.println("previusNode (x,y)  "+previusNode.getUniqueXval()+","+previusNode.getUniqueYval());
@@ -652,6 +652,30 @@ public class BestFirstSearch {
 
 
     public void orangewalks() {
+        System.out.println("best first orange walks");
+        System.out.println("orange method");
+        System.out.println("finalPathNodesBestFirst"+finalPathNodesBestFirst);
+        if(!finalPathNodesBestFirst.isEmpty()){
+            int currentX = finalPathNodesBestFirst.getLast().getUniqueXval();
+            int currentY = finalPathNodesBestFirst.getLast().getUniqueYval();
 
+
+
+            NodeObject newRootBFS=nodeObject[currentX][currentY];
+            setup.setBestFirstupdatedRootNode(newRootBFS);
+
+            setup.orangeGostRectangle.relocate(currentX*setup.blockSize,currentY*setup.blockSize);
+            System.out.println("orangestep "+currentX+","+currentY);
+            System.out.println("orange finalPathNodesBestFirst not empty yet***");
+            finalPathNodesBestFirst.removeLast();
+        }
+        else{
+            System.out.println("finalPathNodes empty bestfirst");
+        }
+
+    }
+
+    public void start(NodeObject pacmanNode, NodeObject bestFirstupdatedRootNode) {
+        System.out.println("start Best First");
     }
 }

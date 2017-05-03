@@ -70,6 +70,8 @@ public class Setup  {
     int orangeGhostPosY;
     boolean orangeIsMade;
     BestFirstSearch bestFirstSearch;
+    public Rectangle orangeGostRectangle;
+    NodeObject bestFirstupdatedRootNode;
 
 
     public Setup(Scene scene, Group root, NodeObject[][] nodeObject, int blockSize, int boxesX, int boxesY) {
@@ -604,12 +606,12 @@ public class Setup  {
 
         blueGostRectangle = new Rectangle(0,0,blockSize,blockSize);
         blueGostRectangle.setFill(Color.BLUE);
-        orangeRect = new Rectangle(blockSize,blockSize);
-        orangeRect.setFill(Color.ORANGE);
+        orangeGostRectangle = new Rectangle(0,0,blockSize,blockSize);
+        orangeGostRectangle.setFill(Color.ORANGE);
 
 
 
-        root.getChildren().addAll(blueGostRectangle,pinkGostRectangle, redGostRectangle,orangeRect);
+        root.getChildren().addAll(blueGostRectangle,pinkGostRectangle, redGostRectangle,orangeGostRectangle);
 
 
 
@@ -806,6 +808,7 @@ public class Setup  {
 
                         bibfs.start(pacmanNode, biBFSupdatedRootNode);
 
+                        bestFirstSearch.start(pacmanNode, bestFirstupdatedRootNode);
 
 
 
@@ -840,7 +843,7 @@ public class Setup  {
                     orangegostPosYUpdate =7;
                     bestFirstSearch = new BestFirstSearch(setup, orangegostPosXUpdate, orangegostPosYUpdate, orangeGhostPosX, orangeGhostPosY, pacmanPosX, pacmanPosY, root, nodeObject, blockSize, boxesX, boxesY);
                     //bestFirstSearch.startNewAstar();
-
+                    bestFirstSearch.start(pacmanNode, bestFirstupdatedRootNode);
 
                 }
 
@@ -1032,7 +1035,6 @@ public class Setup  {
                 if(orangeIsMade){
                     System.out.println("orangewalks");
                     bestFirstSearch.orangewalks();
-
                 }
 
             }
@@ -1112,5 +1114,9 @@ public class Setup  {
 
     public void setbiBFSupdatedRootNode(NodeObject biBFSupdatedRootNode) {
         this.biBFSupdatedRootNode = biBFSupdatedRootNode;
+    }
+
+    public void setBestFirstupdatedRootNode(NodeObject bestFirstupdatedRootNode) {
+        this.bestFirstupdatedRootNode = bestFirstupdatedRootNode;
     }
 }
